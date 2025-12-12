@@ -7,7 +7,7 @@ A responsive, paginated vertical changelog timeline component built with React, 
 
 ## Features
 
-- ✨ **Google Calendar-style vertical timeline**
+- ✨ **Vertical timeline layout**
 - 🎨 **Built entirely with `@asafarim/shared-tokens`** - no hard-coded colors
 - 📱 **Fully responsive** - adapts from mobile to desktop
 - 🔄 **Client & server pagination** support
@@ -251,7 +251,7 @@ pnpm clean
 
 ## Demo App
 
-See `packages/changelog-timeline/changelog-demo` for a full working example with:
+See `changelog-demo` in this repository for a full working example with:
 
 - Sample data
 - All features demonstrated
@@ -276,9 +276,3 @@ Contributions welcome! Please ensure:
 - Code follows existing patterns
 
 ---
-
-## Related Packages
-
-- [`@asafarim/shared-tokens`](../shared-tokens) - Design token system
-- [`@asafarim/shared-ui-react`](../shared-ui-react) - Shared React components
-- [`@asafarim/booking-calendar`](../booking-calendar) - Booking calendar component
