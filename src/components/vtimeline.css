@@ -1,0 +1,359 @@
+/* D:\repos\asafarim-dot-be\packages\changelog-timeline\src\components\vtimeline.css */
+.changelog-timeline {
+  /* Timeline theme colors */
+  --timeline-primary: var(--color-primary, #1a73e8);
+  --timeline-primary-light: var(--color-primary-50, #e8f0fe);
+  --timeline-primary-dark: var(--color-primary-700, #1557b0);
+  --timeline-border: var(--color-border, #dadce0);
+  --timeline-bg: var(--color-background, #ffffff);
+  --timeline-text: var(--color-text, #202124);
+  --timeline-text-muted: var(--color-text-muted, #5f6368);
+  --timeline-shadow: var(--shadow-sm);
+  --timeline-shadow-hover: var(--shadow-md);
+
+  /* Timeline spacing using shared tokens */
+  --timeline-dot-size: 16px;
+  --timeline-line-width: 2px;
+  --timeline-gap: var(--space-8, 2rem);
+  --timeline-card-width: 380px;
+  --timeline-padding: var(--space-6, 1.5rem);
+
+  /* Category colors from theme.css with fallbacks */
+  --category-feature-bg: var(--color-success-50, #e6f4ea);
+  --category-feature-text: var(--color-success-700, #0d652d);
+  --category-feature-icon: var(--color-success-500, #34a853);
+
+  --category-fix-bg: var(--color-error-50, #fce8e6);
+  --category-fix-text: var(--color-error-700, #740001);
+  --category-fix-icon: var(--color-error-500, #d33b27);
+
+  --category-improvement-bg: var(--color-info-50, #e8f0fe);
+  --category-improvement-text: var(--color-info-700, #001d35);
+  --category-improvement-icon: var(--color-info-500, #1a73e8);
+
+  --category-security-bg: var(--color-warning-50, #fef7e0);
+  --category-security-text: var(--color-warning-700, #63200b);
+  --category-security-icon: var(--color-warning-500, #f57c00);
+
+  --category-breaking-bg: var(--color-warning-50, #fce8e6);
+  --category-breaking-text: var(--color-warning-700, #740001);
+  --category-breaking-icon: var(--color-warning-500, #d33b27);
+
+  --category-docs-bg: var(--color-accent-50, #f3e5f5);
+  --category-docs-text: var(--color-accent-700, #4a148c);
+  --category-docs-icon: var(--color-accent-500, #7b1fa2);
+
+  font-family: var(
+    --font-family-base,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif
+  );
+  max-width: var(--width-xl, 1024px);
+  margin: 0 auto;
+  padding: var(--space-8, 2rem) var(--space-4, 1rem);
+  background: var(--timeline-bg);
+  color: var(--timeline-text);
+}
+
+.timeline-header {
+  margin-bottom: var(--space-8, 2rem);
+}
+
+.timeline-title {
+  font-size: var(--font-size-3xl, 2rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--timeline-text);
+  margin: 0 0 var(--space-2, 0.5rem) 0;
+  line-height: var(--line-height-tight, 1.1);
+}
+
+.timeline-subtitle {
+  color: var(--timeline-text-muted);
+  font-size: var(--font-size-base, 1rem);
+}
+
+.filter-chips {
+  display: flex;
+  gap: var(--space-2, 0.5rem);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-8, 2rem);
+}
+
+.filter-chip {
+  padding: var(--space-2, 0.5rem) var(--space-4, 1rem);
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--timeline-border);
+  background: var(--timeline-bg);
+  cursor: pointer;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  transition: var(--transition, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+  color: var(--timeline-text);
+}
+
+.filter-chip:hover {
+  border-color: var(--timeline-primary);
+  background: var(--timeline-primary-light);
+}
+
+.filter-chip.active {
+  background: var(--timeline-primary);
+  color: var(--color-white, white);
+  border-color: var(--timeline-primary);
+}
+
+.results-info {
+  text-align: center;
+  color: var(--timeline-text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+  margin-bottom: var(--space-6, 1.5rem);
+  padding: var(--space-2, 0.5rem);
+}
+
+.version-section {
+  margin-bottom: var(--space-12, 3rem);
+}
+
+.version-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  margin-bottom: var(--space-6, 1.5rem);
+  position: sticky;
+  top: 0;
+  background: var(--timeline-bg);
+  padding: var(--space-3, 0.75rem) 0;
+  z-index: var(--z-sticky, 100);
+}
+
+.version-badge {
+  background: var(--timeline-primary);
+  color: var(--color-white, white);
+  padding: var(--space-2, 0.375rem) var(--space-3, 0.875rem);
+  border-radius: var(--radius-full, 9999px);
+  font-weight: var(--font-weight-semibold, 600);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.version-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--timeline-border);
+}
+
+.timeline-container {
+  position: relative;
+  padding-left: var(--space-8, 2rem);
+}
+
+.timeline-line {
+  position: absolute;
+  left: var(--space-2, 0.5rem);
+  top: 0;
+  bottom: 0;
+  width: var(--timeline-line-width);
+  background: var(--timeline-border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: var(--space-8, 2rem);
+  padding-left: var(--space-8, 2rem);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: calc(-1 * var(--space-6, 1.5rem));
+  top: var(--space-2, 0.5rem);
+  width: var(--timeline-dot-size);
+  height: var(--timeline-dot-size);
+  border-radius: var(--radius-full, 9999px);
+  border: 2px solid var(--timeline-bg);
+  box-shadow: 0 0 0 2px currentColor;
+  z-index: var(--z-base, 2);
+}
+
+.timeline-card {
+  background: var(--timeline-bg);
+  border: 1px solid var(--timeline-border);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--space-5, 1.25rem);
+  box-shadow: var(--timeline-shadow);
+  transition: var(--transition, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+.timeline-card:hover {
+  box-shadow: var(--timeline-shadow-hover);
+  border-color: var(--timeline-primary);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3, 0.75rem);
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.category-icon {
+  font-size: var(--font-size-xl, 1.5rem);
+  line-height: 1;
+}
+
+.card-content {
+  flex: 1;
+}
+
+.card-title {
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--timeline-text);
+  margin: 0 0 var(--space-1, 0.25rem) 0;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--timeline-text-muted);
+  margin-bottom: var(--space-2, 0.5rem);
+}
+
+.category-label {
+  padding: var(--space-1, 0.125rem) var(--space-2, 0.5rem);
+  border-radius: var(--radius-full, 9999px);
+  font-weight: var(--font-weight-medium, 500);
+}
+
+.card-description {
+  color: var(--timeline-text-muted);
+  line-height: var(--line-height-relaxed, 1.5);
+  margin-bottom: var(--space-3, 0.75rem);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.card-tags {
+  display: flex;
+  gap: var(--space-2, 0.375rem);
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: var(--space-1, 0.125rem) var(--space-2, 0.5rem);
+  background: var(--color-surface, #f5f5f5);
+  border: 1px solid var(--timeline-border);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--timeline-text-muted);
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 0.5rem);
+  margin-top: var(--space-10, 2.5rem);
+  padding: var(--space-6, 1.5rem) 0;
+  border-top: 1px solid var(--timeline-border);
+}
+
+.pagination-btn {
+  padding: var(--space-2, 0.5rem) var(--space-4, 1rem);
+  border: 1px solid var(--timeline-border);
+  background: var(--timeline-bg);
+  color: var(--timeline-text);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: var(--transition, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--timeline-primary-light);
+  border-color: var(--timeline-primary);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: var(--space-1, 0.25rem);
+}
+
+.pagination-number {
+  min-width: 40px;
+  height: 40px;
+  padding: var(--space-2, 0.5rem);
+  border: 1px solid var(--timeline-border);
+  background: var(--timeline-bg);
+  color: var(--timeline-text);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-medium, 500);
+  cursor: pointer;
+  transition: var(--transition, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-number:hover {
+  background: var(--timeline-primary-light);
+  border-color: var(--timeline-primary);
+}
+
+.pagination-number.active {
+  background: var(--timeline-primary);
+  color: var(--color-white, white);
+  border-color: var(--timeline-primary);
+}
+
+.pagination-ellipsis {
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--timeline-text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+@media (max-width: 640px) {
+  .changelog-timeline {
+    padding: var(--space-4, 1rem) var(--space-2, 0.5rem);
+  }
+
+  .timeline-title {
+    font-size: var(--font-size-2xl, 1.5rem);
+  }
+
+  .timeline-container {
+    padding-left: var(--space-6, 1.5rem);
+  }
+
+  .timeline-item {
+    padding-left: var(--space-6, 1.5rem);
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .pagination-btn {
+    padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+    font-size: var(--font-size-xs, 0.75rem);
+  }
+
+  .pagination-number {
+    min-width: 36px;
+    height: 36px;
+  }
+}
