@@ -2,7 +2,7 @@
 
 Local demo app for `@asafarim/changelog-timeline`.
 
-![Changelog Timeline Demo](https://unpkg.com/@asafarim/changelog-timeline@latest/changelog-demo/src/public/changelog-demo.png)
+![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/src/public/changelog-demo.png?raw=true)
 
 ## Run
 
