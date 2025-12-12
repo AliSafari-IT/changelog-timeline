@@ -2,7 +2,7 @@
 
 A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens.
 
-![Changelog Timeline Demo](./changelog-demo/src/public/changelog-demo.png)
+![Changelog Timeline Demo](https://unpkg.com/@asafarim/changelog-timeline@latest/changelog-demo/src/public/changelog-demo.png)
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)

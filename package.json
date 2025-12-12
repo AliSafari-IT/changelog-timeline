@@ -17,7 +17,8 @@
   "files": [
     "dist",
     "README.md",
-    "package.json"
+    "package.json",
+    "changelog-demo/src/public/changelog-demo.png"
   ],
   "scripts": {
     "clean": "rm -rf dist",
