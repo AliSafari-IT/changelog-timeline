@@ -2,6 +2,8 @@
 
 Local demo app for `@asafarim/changelog-timeline`.
 
+![Changelog Timeline Demo](./src/public/changelog-demo.png)
+
 ## Run
 
 From `packages/changelog-timeline/changelog-demo`:

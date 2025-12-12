@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     {/* <ThemeProvider> */}
     <ChangelogTimeline
       entries={sampleChangelog}
-      maxVisible={3}
+      maxVisible={8}
       showPagination={true}
     />
     {/* </ThemeProvider> */}
