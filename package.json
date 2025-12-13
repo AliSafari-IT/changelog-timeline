@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "dev": "pnpm build && pnpm --filter changelog-demo dev",
+    "dev": "pnpm build && pnpm --filter @asafarim/changelog-timeline-demo dev",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prepublishOnly": "npm run build"
