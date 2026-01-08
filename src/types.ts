@@ -30,6 +30,7 @@ export interface ChangelogTimelineProps {
   className?: string;
   maxVisible?: number;
   showPagination?: boolean;
+  layout?: 'left' | 'center';
 }
 
 export interface TimelineItemProps {

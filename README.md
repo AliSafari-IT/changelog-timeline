@@ -10,7 +10,7 @@ A responsive, paginated vertical changelog timeline component built with React, 
 ## Features
 
 - ✨ **Vertical timeline layout**
-- 🎨 **Built entirely with `@asafarim/shared-tokens`** - no hard-coded colors
+- 🎨 **Powered by `@asafarim/design-tokens`** – no hard-coded colors
 - 📱 **Fully responsive** - adapts from mobile to desktop
 - 🔄 **Client & server pagination** support
 - 🏷️ **Category filtering** with visual badges
@@ -31,7 +31,7 @@ pnpm add @asafarim/changelog-timeline
 ### Peer Dependencies
 
 ```bash
-pnpm add react react-dom @asafarim/shared-tokens
+pnpm add react react-dom
 ```
 
 ---
@@ -40,8 +40,7 @@ pnpm add react react-dom @asafarim/shared-tokens
 
 ```tsx
 import { ChangelogTimeline } from '@asafarim/changelog-timeline';
-import '@asafarim/changelog-timeline/styles.css';
-import '@asafarim/shared-tokens/styles.css';
+import '@asafarim/changelog-timeline/css';
 
 const entries = [
   {
@@ -79,31 +78,31 @@ function App() {
 
 ## Design Token Usage
 
-This library is **100% token-based**. All colors, spacing, typography, shadows, and transitions come from `@asafarim/shared-tokens`.
+This library is **100% token-based**. All colors, spacing, typography, shadows, and transitions come from `@asafarim/design-tokens` (auto-imported when you import `@asafarim/changelog-timeline/css`).
 
 ### Token Categories Used
 
 | Token Type | Examples |
 |------------|----------|
-| **Colors** | `var(--color-primary)`, `var(--color-success-500)`, `var(--color-text)` |
-| **Spacing** | `var(--space-2)`, `var(--space-4)`, `var(--space-6)` |
-| **Typography** | `var(--font-size-sm)`, `var(--font-size-base)`, `var(--line-height-relaxed)` |
-| **Radius** | `var(--radius-sm)`, `var(--radius-md)` |
-| **Shadows** | `var(--shadow-sm)`, `var(--shadow-md)` |
-| **Transitions** | `var(--transition)`, `var(--transition-slow)` |
+| **Colors** | `var(--asm-color-brand-primary-600)`, `var(--asm-color-semantic-success)`, `var(--asm-color-text)` |
+| **Spacing** | `var(--asm-space-2)`, `var(--asm-space-4)`, `var(--asm-space-8)` |
+| **Typography** | `var(--asm-font-size-sm)`, `var(--asm-font-size-md)`, `var(--asm-line-height-relaxed)` |
+| **Radius** | `var(--asm-shape-radius-sm)`, `var(--asm-shape-radius-md)` |
+| **Shadows** | `var(--asm-effect-shadow-sm)`, `var(--asm-effect-shadow-md)` |
+| **Transitions** | `var(--asm-motion-duration-fast)`, `var(--asm-motion-easing-standard)` |
 
 ### Category Color Mapping
 
 Each changelog category automatically maps to semantic token colors:
 
-| Category | Background Token | Text Token |
-|----------|------------------|------------|
-| `feature` | `--color-success-100` | `--color-success-700` |
-| `fix` | `--color-danger-100` | `--color-danger-700` |
-| `improvement` | `--color-info-100` | `--color-info-700` |
-| `security` | `--color-warning-100` | `--color-warning-700` |
-| `breaking` | `--color-danger-100` | `--color-danger-900` |
-| `docs` | `--color-accent-100` | `--color-accent-700` |
+| Category | Primary Token | Notes |
+|----------|---------------|-------|
+| `feature` | `--asm-color-semantic-success` | Used for icon & label text |
+| `fix` | `--asm-color-semantic-error` | |
+| `improvement` | `--asm-color-semantic-info` | |
+| `security` | `--asm-color-semantic-warning` | |
+| `breaking` | `--asm-color-semantic-error` | |
+| `docs` | `--asm-color-brand-primary-600` | |
 
 ---
 
@@ -190,7 +189,7 @@ const entries = data.map(entry => ({
 
 ## Theming
 
-The timeline automatically adapts to light/dark themes via `@asafarim/shared-tokens`.
+The timeline automatically adapts to light/dark themes via `@asafarim/design-tokens`.
 
 ### Custom Theme Extension
 
@@ -200,11 +199,11 @@ You can extend the theme by overriding token variables:
 :root {
   /* Override timeline-specific tokens */
   --timeline-dot-size: 20px;
-  --timeline-item-gap: var(--space-8);
-  
+  --timeline-gap: var(--asm-space-10);
+
   /* Override category colors */
-  --category-feature-bg: var(--color-primary-100);
-  --category-feature-text: var(--color-primary-800);
+  --category-feature-bg: rgba(34, 197, 94, 0.15);
+  --category-feature-text: var(--asm-color-semantic-success);
 }
 ```
 
@@ -272,7 +271,7 @@ MIT © ASafariM
 
 Contributions welcome! Please ensure:
 
-- All colors/spacing use tokens from `@asafarim/shared-tokens`
+- All colors/spacing use tokens from `@asafarim/design-tokens`
 - TypeScript types are complete
 - Components are accessible
 - Code follows existing patterns

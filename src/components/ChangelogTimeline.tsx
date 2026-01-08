@@ -1,11 +1,10 @@
-/// <reference types="vite/client" />
 import React, { useState, useMemo } from "react";
 import type {
   ChangelogEntry,
   ChangelogTimelineProps,
   PaginationConfig,
 } from "../types";
-import "./vtimeline.css";
+import "../styles/vtimeline.css";
 
 // Category colors and icons
 const categoryConfig = {
@@ -157,6 +156,7 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   className = "",
   maxVisible = 8,
   showPagination = true,
+  layout = "left",
 }) => {
   const [filter, setFilter] = useState<
     "all" | "feature" | "fix" | "improvement" | "security" | "breaking" | "docs"
@@ -211,7 +211,7 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   const endEntry = Math.min(currentPage * maxVisible, totalCount);
 
   return (
-    <div className={`changelog-timeline ${className}`}>
+    <div className={`changelog-timeline changelog-timeline--${layout} ${className}`}>
       <div className="timeline-header">
         <h1 className="timeline-title">📝 Changelog</h1>
         <p className="timeline-subtitle">Track all updates and changes</p>
@@ -251,10 +251,14 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
 
           <div className="timeline-container">
             <div className="timeline-line" />
-            {groupedByVersion[version].map((entry) => {
+            {groupedByVersion[version].map((entry, index) => {
               const config = categoryConfig[entry.category];
+              const isLeft = index % 2 === 0;
+              const itemClass = layout === "center" 
+                ? isLeft ? "timeline-item--left" : "timeline-item--right"
+                : "";
               return (
-                <div key={entry.id} className="timeline-item">
+                <div key={entry.id} className={`timeline-item ${itemClass}`}>
                   <div
                     className="timeline-dot"
                     style={{ color: config.color }}

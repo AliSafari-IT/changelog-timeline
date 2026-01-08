@@ -1,5 +1,6 @@
 // changelog-timeline\src\index.ts
-import './components/vtimeline.css';
+import '@asafarim/design-tokens/css';
+import './styles/vtimeline.css';
 
 export { default as ChangelogTimeline } from './components/ChangelogTimeline';
 export type {

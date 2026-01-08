@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/changelog-timeline",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Responsive, paginated vertical changelog timeline using ASafariM design tokens",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -12,7 +12,8 @@
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
-    "./styles.css": "./dist/changelog-timeline.css"
+    "./css": "./dist/style.css",
+    "./styles.css": "./dist/style.css"
   },
   "files": [
     "dist",
@@ -22,16 +23,19 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "dev": "pnpm build && pnpm --filter @asafarim/changelog-timeline-demo dev",
+    "demo": "pnpm build && pnpm --filter @asafarim/changelog-timeline-demo dev",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "deploy": "pnpm build && pnpm --filter @asafarim/changelog-timeline-demo deploy",
+    "release": "node scripts/release.js"
   },
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
   "dependencies": {
+    "@asafarim/design-tokens": "^0.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
@@ -49,7 +53,12 @@
     "typescript",
     "asafarim"
   ],
-  "author": "ASafariM",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AliSafari-IT/changelog-timeline.git"
+  },
+  "homepage": "https://alisafari-it.github.io/changelog-timeline/",
+  "author": "Ali Safari",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
