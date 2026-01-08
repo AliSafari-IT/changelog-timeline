@@ -4,6 +4,7 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [react(), dts({ include: ['src'] })],
+  base: process.env.BASE_PATH || '/changelog-timeline/',
   build: {
     lib: {
       entry: 'src/index.ts',
