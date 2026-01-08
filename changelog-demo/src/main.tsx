@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import "@asafarim/changelog-timeline/css";
 import { sampleChangelog } from "./data/sampleChangelog";
@@ -6,20 +6,83 @@ import "./index.css";
 import { ChangelogTimeline } from "@asafarim/changelog-timeline";
 // import ThemeProvider from '@asafarim/react-themes';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    {/* <ThemeProvider> */}
-    <nav className="navbar">
-      <div className="navbar-logo">
-        <img
-          src={`${import.meta.env.BASE_URL}logo.svg`}
-          alt="Logo"
-          className="navbar-logo-img"
-          title="Changelog Timeline Demo"
-        />
-        <span className="navbar-title">Changelog Timeline Demo</span>
-      </div>
-      <div className="navbar-actions">
+const GetStartedModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="modal-overlay" onClick={onClose} />
+      <dialog className="modal-dialog" open>
+        <div className="modal-header">
+          <h2>Get Started with Changelog Timeline</h2>
+          <button className="modal-close" onClick={onClose} aria-label="Close modal">
+            ✕
+          </button>
+        </div>
+        <div className="modal-body">
+          <h3>Installation</h3>
+          <pre>
+            <code>pnpm add @asafarim/changelog-timeline</code>
+          </pre>
+
+          <h3>Quick Setup</h3>
+          <pre>
+            <code>{`import { ChangelogTimeline } from '@asafarim/changelog-timeline';
+import '@asafarim/changelog-timeline/css';
+
+<ChangelogTimeline
+  entries={entries}
+  maxVisible={8}
+  showPagination
+/>`}</code>
+          </pre>
+
+          <p>
+            <strong>Learn more:</strong> Check the tutorial below or visit{" "}
+            <a
+              href="https://github.com/AliSafari-IT/changelog-timeline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+            .
+          </p>
+        </div>
+        <div className="modal-footer">
+          <button className="modal-btn-primary" onClick={onClose}>
+            Got it
+          </button>
+        </div>
+      </dialog>
+    </>
+  );
+};
+
+const App = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  return (
+    <>
+      <GetStartedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <nav className="navbar">
+        <div className="navbar-logo">
+          <img
+            src={`${import.meta.env.BASE_URL}logo.svg`}
+            alt="Logo"
+            className="navbar-logo-img"
+            title="Changelog Timeline Demo"
+          />
+          <span className="navbar-title">Changelog Timeline Demo</span>
+        </div>
+        <div className="navbar-actions">
+          <button
+            className="navbar-btn-primary"
+            onClick={() => setModalOpen(true)}
+            title="Get started with Changelog Timeline"
+          >
+            Get Started
+          </button>
         <a
           className="navbar-icon-btn"
           href="https://github.com/AliSafari-IT/changelog-timeline"
@@ -79,8 +142,96 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       maxVisible={8}
       showPagination={true}
       layout="center"
-
     />
+    <section className="timeline-tutorial">
+      <header>
+        <p className="tutorial-pill">Hands-on guide</p>
+        <h2>Build your own changelog in five steps</h2>
+        <p>
+          Follow the workflow below inside any React + TypeScript project. All
+          spacing, colors, typography, and elevation automatically come from{" "}
+          <code>@asafarim/design-tokens</code>, so your changelog stays on brand
+          without hard-coded values.
+        </p>
+      </header>
+      <ol>
+        <li>
+          <h3>Install dependencies</h3>
+          <p>Make sure React 18+ is available, then add the timeline package.</p>
+          <pre>
+            <code>{`pnpm add @asafarim/changelog-timeline
+pnpm add react react-dom`}</code>
+          </pre>
+        </li>
+        <li>
+          <h3>Prepare strongly-typed changelog entries</h3>
+          <p>
+            Every entry maps to the <code>ChangelogEntry</code> type. Keep
+            versions semantic and include tags for quick scanning.
+          </p>
+          <pre>
+            <code>{`import type { ChangelogEntry } from '@asafarim/changelog-timeline';
+
+const entries: ChangelogEntry[] = [
+  {
+    id: 'release-2.1.0-feature-dark-mode',
+    version: '2.1.0',
+    date: '2025-01-15',
+    category: 'feature',
+    title: 'Added dark mode',
+    description: 'Timeline now follows the active theme automatically.',
+    tags: ['ui', 'accessibility'],
+  },
+];`}</code>
+          </pre>
+        </li>
+        <li>
+          <h3>Import CSS tokens once</h3>
+          <p>
+            The component automatically pulls every design token after this
+            import—no extra setup required.
+          </p>
+          <pre>
+            <code>{`import '@asafarim/changelog-timeline/css';`}</code>
+          </pre>
+        </li>
+        <li>
+          <h3>Render the component</h3>
+          <p>
+            Pass entries and customize pagination, layout, or header copy. The
+            component remains tree-shakable.
+          </p>
+          <pre>
+            <code>{`import { ChangelogTimeline } from '@asafarim/changelog-timeline';
+
+export const ProductChangelog = () => (
+  <ChangelogTimeline
+    entries={entries}
+    title="Product updates"
+    subtitle="Fresh releases and fixes"
+    layout="center"
+    maxVisible={6}
+    showPagination
+  />
+);`}</code>
+          </pre>
+        </li>
+        <li>
+          <h3>Ship with confidence</h3>
+          <p>
+            Deploy as part of any Vite, Next.js, or CRA stack. The component
+            respects SSR/CSR boundaries and brings its own accessibility affordances.
+          </p>
+        </li>
+      </ol>
+    </section>
     {/* </ThemeProvider> */}
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
   </React.StrictMode>
 );

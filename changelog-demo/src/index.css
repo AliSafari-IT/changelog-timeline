@@ -210,3 +210,198 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
     font-size: 1rem;
   }
 }
+
+/* ========================= 
+   GET STARTED BUTTON
+   ========================= */
+
+.navbar-btn-primary {
+  padding: var(--asm-space-2) var(--asm-space-4);
+  background: linear-gradient(135deg, var(--asm-color-brand-primary-600) 0%, var(--asm-color-brand-primary-700) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--asm-radius-2);
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(95, 127, 255, 0.3);
+}
+
+.navbar-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(95, 127, 255, 0.4);
+}
+
+.navbar-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* ========================= 
+   MODAL
+   ========================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--asm-color-surface);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 1001;
+  animation: slideUp 0.3s ease;
+  padding: 0;
+}
+
+.modal-dialog::backdrop {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, -40%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--asm-space-6);
+  border-bottom: 1px solid var(--asm-color-border);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: var(--asm-font-size-xl);
+  font-weight: var(--asm-font-weight-700);
+  color: var(--asm-color-text);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--asm-color-text-muted);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--asm-radius-2);
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--asm-color-surface-muted);
+  color: var(--asm-color-text);
+}
+
+.modal-body {
+  padding: var(--asm-space-6);
+}
+
+.modal-body h3 {
+  margin: var(--asm-space-4) 0 var(--asm-space-2) 0;
+  font-size: var(--asm-font-size-md);
+  font-weight: var(--asm-font-weight-600);
+  color: var(--asm-color-text);
+}
+
+.modal-body h3:first-child {
+  margin-top: 0;
+}
+
+.modal-body pre {
+  background: var(--asm-color-surface-muted);
+  border: 1px solid var(--asm-color-border);
+  border-radius: var(--asm-radius-2);
+  padding: var(--asm-space-3);
+  overflow-x: auto;
+  margin: var(--asm-space-2) 0;
+}
+
+.modal-body code {
+  font-family: 'Courier New', monospace;
+  font-size: var(--asm-font-size-xs);
+  color: var(--asm-color-text);
+  line-height: var(--asm-line-height-relaxed);
+}
+
+.modal-body p {
+  color: var(--asm-color-text-muted);
+  line-height: var(--asm-line-height-relaxed);
+  margin: var(--asm-space-3) 0;
+}
+
+.modal-body a {
+  color: var(--asm-color-brand-primary-600);
+  text-decoration: none;
+  font-weight: var(--asm-font-weight-600);
+}
+
+.modal-body a:hover {
+  text-decoration: underline;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--asm-space-3);
+  padding: var(--asm-space-4) var(--asm-space-6);
+  border-top: 1px solid var(--asm-color-border);
+}
+
+.modal-btn-primary {
+  padding: var(--asm-space-2) var(--asm-space-5);
+  background: linear-gradient(135deg, var(--asm-color-brand-primary-600) 0%, var(--asm-color-brand-primary-700) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--asm-radius-2);
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(95, 127, 255, 0.3);
+}
+
+.modal-btn-primary:active {
+  transform: translateY(0);
+}

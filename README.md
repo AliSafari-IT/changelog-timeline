@@ -1,8 +1,8 @@
-# @asafarim/changelog-timeline
+# @asafarim/changelog-timeline package
 
-A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens.
+A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens. See demo at [https://asafarim.github.io/changelog-timeline/](https://asafarim.github.io/changelog-timeline/).
 
-![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/src/public/changelog-demo.png?raw=true)
+![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/public/changelog-demo.png?raw=true)
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
@@ -73,6 +73,65 @@ function App() {
   );
 }
 ```
+
+---
+
+## Comprehensive Tutorial: Build a Product Changelog in 5 Steps
+
+> Everything below assumes a React 18 + TypeScript project that already uses PNPM.  
+> The component auto-imports `@asafarim/design-tokens`, so **never hard-code colors, spacing, or typography**.
+
+1. **Install dependencies**
+
+   ```bash
+   pnpm add @asafarim/changelog-timeline
+   pnpm add react react-dom
+   ```
+
+2. **Model entries with `ChangelogEntry`**
+
+   ```ts
+   import type { ChangelogEntry } from '@asafarim/changelog-timeline';
+
+   const entries: ChangelogEntry[] = [
+     {
+       id: 'release-2.1.0-feature-dark-mode',
+       version: '2.1.0',
+       date: '2025-01-15',
+       category: 'feature',
+       title: 'Added dark mode',
+       description: 'Timeline now follows the active theme automatically.',
+       tags: ['ui', 'accessibility'],
+     },
+   ];
+   ```
+
+3. **Import CSS tokens once**
+
+   ```ts
+   import '@asafarim/changelog-timeline/css';
+   ```
+
+4. **Render the component**
+
+   ```tsx
+   import { ChangelogTimeline } from '@asafarim/changelog-timeline';
+
+   export const ProductChangelog = () => (
+     <ChangelogTimeline
+       entries={entries}
+       title="Product updates"
+       subtitle="Fresh releases and fixes"
+       layout="center"
+       maxVisible={6}
+       showPagination
+     />
+   );
+   ```
+
+5. **Deploy with confidence**
+
+   Works in Vite, Next.js (SSR/ISR), CRA, Remix, and any bundler that understands ESM. The component is fully typed, accessible, and token-driven.
 
 ---
 

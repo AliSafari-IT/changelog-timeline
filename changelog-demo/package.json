@@ -1,7 +1,7 @@
 {
   "name": "@asafarim/changelog-timeline-demo",
   "private": true,
-  "version": "0.4.1",
+  "version": "0.5.0",
   "type": "module",
   "scripts": {
     "predev": "kill-port 5187",
