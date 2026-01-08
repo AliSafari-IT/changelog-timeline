@@ -43,8 +43,8 @@ importers:
   changelog-demo:
     dependencies:
       '@asafarim/changelog-timeline':
-        specifier: file:../
-        version: file:(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:..
       kill-port:
         specifier: ^2.0.1
         version: 2.0.1
@@ -78,12 +78,6 @@ importers:
         version: 5.4.21(@types/node@20.19.27)
 
 packages:
-
-  '@asafarim/changelog-timeline@file:':
-    resolution: {directory: '', type: directory}
-    peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
 
   '@asafarim/design-tokens@0.5.0':
     resolution: {integrity: sha512-q7NguuMVBgaToX1EEOeraAiBebqKhidKKUohsMpKScHJh7mv/5igQcpDI+xdL479pCy9Kx5yUu0dhyNX2Gro+Q==}
@@ -1159,12 +1153,6 @@ packages:
     hasBin: true
 
 snapshots:
-
-  '@asafarim/changelog-timeline@file:(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@asafarim/design-tokens': 0.5.0
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@asafarim/design-tokens@0.5.0': {}
 
