@@ -53,7 +53,7 @@
 
 /* Header */
 .timeline-header {
-  margin-bottom: var(--asm-space-8);
+  margin-bottom: var(--asm-space-0) var(--asm-space-4);
 }
 
 .timeline-title {

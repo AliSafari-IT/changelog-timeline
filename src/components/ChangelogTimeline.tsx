@@ -154,9 +154,12 @@ const Pagination: React.FC<PaginationConfig> = ({
 const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   entries,
   className = "",
+  headerClassName = "",
   maxVisible = 8,
   showPagination = true,
   layout = "left",
+  title,
+  subtitle,
 }) => {
   const [filter, setFilter] = useState<
     "all" | "feature" | "fix" | "improvement" | "security" | "breaking" | "docs"
@@ -212,9 +215,9 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
 
   return (
     <div className={`changelog-timeline changelog-timeline--${layout} ${className}`}>
-      <div className="timeline-header">
-        <h1 className="timeline-title">📝 Changelog</h1>
-        <p className="timeline-subtitle">Track all updates and changes</p>
+      <div className={`timeline-header ${headerClassName}`}>
+        <h1 className="timeline-title">{title || "📝 Changelog"}</h1>
+        <p className="timeline-subtitle">{subtitle || "Track all updates and changes"}</p>
       </div>
 
       <div className="filter-chips">

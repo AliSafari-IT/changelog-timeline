@@ -1,6 +1,212 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body, #root { width: 100%; height: 100%; }
-body { font-family: -apple-system, sans-serif; }
-.app-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
-.app-main { flex: 1; padding: var(--space-6); overflow-y: auto; }
-.demo-page { max-width: 1200px; margin: 0 auto; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+/* ========================= 
+   NAVBAR
+   ========================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--asm-space-6);
+  padding: var(--asm-space-4) var(--asm-space-8);
+  background: linear-gradient(135deg, var(--asm-color-danger-300) 0%, var(--asm-color-purple-400) 100%);
+  box-shadow: 0 4px 20px rgba(95, 127, 255, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 300;
+}
+
+.navbar-title {
+  display: flex;
+  align-items: center;
+  gap: var(--asm-space-3);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--asm-color-success-600);
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-family: 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--asm-space-2);
+}
+
+.navbar-logo-img {
+  width: 60px;
+  height: 60px;
+}
+
+.navbar-actions {
+  display: flex;
+  gap: var(--asm-space-2);
+  align-items: center;
+}
+
+.navbar-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--asm-radius-2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--asm-color-surface);
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.navbar-icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.navbar-icon-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ========================= 
+   LAYOUT
+   ========================= */
+
+.app-wrapper { 
+  min-height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  background: linear-gradient(180deg, #F8F9FF 0%, #FFFFFF 100%);
+}
+
+.app-main { 
+  flex: 1; 
+  padding: var(--asm-space-8); 
+  overflow-y: auto; 
+}
+
+.demo-page { 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+/* ========================= 
+   CUSTOM HEADER
+   ========================= */
+
+.custom-header {
+  background: linear-gradient(135deg, rgba(95, 127, 255, 0.08) 0%, rgba(123, 104, 238, 0.08) 100%);
+  border: 2px solid rgba(95, 127, 255, 0.2);
+  padding: var(--asm-space-8) var(--asm-space-6);
+  border-radius: var(--asm-radius-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--asm-space-4);
+  margin-bottom: var(--asm-space-8);
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(95, 127, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.custom-header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(123, 104, 238, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.custom-header .timeline-title {
+  color: #5F7FFF;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  font-family: 'Segoe UI', sans-serif;
+  letter-spacing: -1px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  background: linear-gradient(135deg, #5F7FFF 0%, #7B68EE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.custom-header .timeline-subtitle {
+  color: #6B7280;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 500;
+  font-family: 'Segoe UI', sans-serif;
+  letter-spacing: 0.3px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 600px;
+}
+
+/* ========================= 
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: var(--asm-space-4);
+    padding: var(--asm-space-4);
+  }
+
+  .navbar-title {
+    font-size: 1.25rem;
+  }
+
+  .navbar-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .custom-header {
+    padding: var(--asm-space-6) var(--asm-space-4);
+  }
+
+  .custom-header .timeline-title {
+    font-size: 2rem;
+  }
+
+  .custom-header .timeline-subtitle {
+    font-size: 1rem;
+  }
+}

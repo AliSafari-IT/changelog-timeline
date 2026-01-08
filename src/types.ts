@@ -18,7 +18,8 @@ export interface ChangelogEntry {
 }
 
 export interface PaginationConfig {
-  page: number;
+  page: number;  
+  /** @default 10 */
   pageSize: number;
   totalCount: number;
   categoryFilter: 'all' | ChangelogCategory;
@@ -28,9 +29,13 @@ export interface PaginationConfig {
 export interface ChangelogTimelineProps {
   entries: ChangelogEntry[];
   className?: string;
+  headerClassName?: string;
   maxVisible?: number;
   showPagination?: boolean;
+  /** @default 'left' */
   layout?: 'left' | 'center';
+  title?: string;
+  subtitle?: string;
 }
 
 export interface TimelineItemProps {
