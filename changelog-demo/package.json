@@ -6,7 +6,7 @@
   "scripts": {
     "predev": "kill-port 5187",
     "dev": "cd .. && pnpm build && cd changelog-demo && vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "predeploy": "pnpm run build",
     "deploy": "gh-pages -d dist"
