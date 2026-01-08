@@ -1,6 +1,6 @@
-# @asafarim/changelog-timeline package
+# @asafarim/changelog-timeline
 
-A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens. See demo at [https://asafarim.github.io/changelog-timeline/](https://asafarim.github.io/changelog-timeline/).
+A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens. See demo at [https://alisafari-it.github.io/changelog-timeline/](https://alisafari-it.github.io/changelog-timeline/).
 
 ![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/public/changelog-demo.png?raw=true)
 
@@ -8,6 +8,8 @@ A responsive, paginated vertical changelog timeline component built with React, 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## Features
+
+`@asafarim/changelog-timeline` is a lightweight, token-driven React timeline component for changelogs and release notes, with filtering, pagination, and version grouping—packaged as a reusable library with a live demo and GitHub Pages preview.
 
 - ✨ **Vertical timeline layout**
 - 🎨 **Powered by `@asafarim/design-tokens`** – no hard-coded colors
