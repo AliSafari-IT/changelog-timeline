@@ -1,0 +1,26 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="#5F7FFF" opacity="0.1" stroke="#5F7FFF" stroke-width="2"/>
+  
+  <!-- Timeline line -->
+  <line x1="100" y1="30" x2="100" y2="170" stroke="#5F7FFF" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Dots on timeline -->
+  <circle cx="100" cy="50" r="6" fill="#5F7FFF"/>
+  <circle cx="100" cy="100" r="8" fill="#5F7FFF"/>
+  <circle cx="100" cy="150" r="6" fill="#5F7FFF"/>
+  
+  <!-- Left cards (simplified) -->
+  <rect x="20" y="40" width="60" height="30" rx="4" fill="#E8EEFF" stroke="#5F7FFF" stroke-width="1.5"/>
+  <line x1="80" y1="55" x2="94" y2="55" stroke="#5F7FFF" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <rect x="20" y="90" width="60" height="30" rx="4" fill="#E8EEFF" stroke="#5F7FFF" stroke-width="1.5"/>
+  <line x1="80" y1="105" x2="94" y2="105" stroke="#5F7FFF" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Right cards (simplified) -->
+  <rect x="120" y="140" width="60" height="30" rx="4" fill="#E8EEFF" stroke="#5F7FFF" stroke-width="1.5"/>
+  <line x1="106" y1="155" x2="120" y2="155" stroke="#5F7FFF" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Text -->
+  <text x="100" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#5F7FFF">TIMELINE</text>
+</svg>
