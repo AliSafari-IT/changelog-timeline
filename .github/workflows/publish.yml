@@ -68,9 +68,9 @@ jobs:
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Build library
-        run: pnpm build
+        run: pnpm run build
       - name: Build demo with base path
-        run: pnpm --filter @asafarim/changelog-timeline-demo build
+        run: cd changelog-demo && pnpm run build
       - run: echo "Build complete. Checking changelog-demo/dist contents..."
       - run: ls -la changelog-demo/dist/ || echo "changelog-demo/dist does not exist"
       - name: Publish to gh-pages branch
