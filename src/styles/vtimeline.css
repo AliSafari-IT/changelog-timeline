@@ -525,3 +525,18 @@
   background: var(--asm-color-warning-200);
   color: var(--asm-color-warning-950);
 }
+
+.empty-state {
+  display: grid;
+  gap: var(--asm-space-2);
+  justify-items: center;
+  padding: var(--asm-space-10) var(--asm-space-4);
+  border: 1px dashed var(--timeline-border);
+  border-radius: var(--asm-radius-md);
+  color: var(--timeline-text-muted);
+  text-align: center;
+}
+
+.empty-state strong {
+  color: var(--timeline-text);
+}

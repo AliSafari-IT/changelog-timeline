@@ -188,10 +188,12 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
       const matchesCategory = filter === "all" || entry.category === filter;
       if (!matchesCategory || !normalizedQuery) return matchesCategory;
 
+      const version = entry.version.replace(/^v/i, "");
       const searchableText = [
         entry.title,
         entry.description,
         entry.version,
+        `v${version}`,
         ...entry.tags,
       ].join(" ").toLowerCase();
 
@@ -288,6 +290,13 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
         <div className="results-info">
           Showing {startEntry}-{endEntry} of {totalCount}{" "}
           {filter === "all" ? "entries" : filter + " entries"}
+        </div>
+      )}
+
+      {totalCount === 0 && (
+        <div className="empty-state" role="status">
+          <strong>No changelog entries found.</strong>
+          {searchQuery && <span>Try a different search term.</span>}
         </div>
       )}
 
