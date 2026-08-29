@@ -718,31 +718,33 @@ body {
 
 .navbar-btn-primary {
   padding: var(--asm-space-2) var(--asm-space-4);
+  border: var(--asm-border-hairline) solid var(--asm-color-border);
   border-radius: var(--asm-radius-md);
-  background: var(--asm-color-primary-0);
-  color: var(--asm-color-primary-800);
+  background: var(--asm-color-surface);
+  color: var(--asm-color-text);
   font-size: var(--asm-font-size-sm);
   font-weight: var(--asm-font-weight-700);
   box-shadow: none;
 }
 
 .navbar-btn-primary:hover {
-  background: var(--asm-color-primary-100);
+  background: var(--asm-color-surface-muted);
   box-shadow: none;
 }
 
 .navbar-icon-btn {
   width: var(--asm-icon-size-lg);
   height: var(--asm-icon-size-lg);
-  border: var(--asm-border-hairline) solid var(--asm-color-primary-700);
+  border: var(--asm-border-hairline) solid var(--asm-color-border);
   border-radius: var(--asm-radius-md);
-  background: var(--asm-color-primary-900);
-  color: var(--demo-header-muted);
+  background: var(--asm-color-surface);
+  color: var(--asm-color-text);
 }
 
 .navbar-icon-btn:hover {
-  border-color: var(--asm-color-primary-300);
-  background: var(--asm-color-primary-800);
+  border-color: var(--asm-color-brand-primary-600);
+  background: var(--asm-color-surface-muted);
+  color: var(--asm-color-brand-primary-600);
 }
 
 .app-main {
@@ -968,4 +970,21 @@ body {
   .roadmap-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.demo-page .filter-chip {
+  color: var(--asm-color-text);
+}
+
+.demo-page .filter-chip:hover {
+  border-color: var(--asm-color-brand-primary-600);
+  background: var(--asm-color-surface);
+  color: var(--asm-color-text);
+}
+
+.demo-page .filter-chip.active,
+.demo-page .filter-chip.active:hover {
+  border-color: var(--asm-color-brand-primary-600);
+  background: var(--asm-color-brand-primary-600);
+  color: var(--asm-color-surface);
 }

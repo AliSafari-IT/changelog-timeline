@@ -1,26 +1,50 @@
-<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 200 200" role="img" aria-labelledby="logo-title logo-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="logo-title">Changelog Timeline</title>
+  <desc id="logo-desc">A timeline spine connecting three changelog cards.</desc>
+  <defs>
+    <linearGradient id="logo-surface" x1="24" y1="18" x2="176" y2="182" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#304FFE"/>
+      <stop offset="1" stop-color="#1E40FF"/>
+    </linearGradient>
+    <linearGradient id="logo-card" x1="25" y1="28" x2="164" y2="172" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEF2FF"/>
+    </linearGradient>
+  </defs>
+
   <!-- Background circle -->
-  <circle cx="100" cy="100" r="95" fill="#5F7FFF" opacity="0.1" stroke="#5F7FFF" stroke-width="2"/>
-  
+  <rect x="8" y="8" width="184" height="184" rx="48" fill="#0F172A"/>
+  <rect x="10" y="10" width="180" height="180" rx="46" fill="url(#logo-surface)" opacity="0.96"/>
+  <path d="M30 148C62 178 123 184 170 148" fill="none" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2"/>
+
   <!-- Timeline line -->
-  <line x1="100" y1="30" x2="100" y2="170" stroke="#5F7FFF" stroke-width="3" stroke-linecap="round"/>
-  
+  <path d="M100 34V166" stroke="#FFFFFF" stroke-opacity="0.78" stroke-width="4" stroke-linecap="round"/>
+
   <!-- Dots on timeline -->
-  <circle cx="100" cy="50" r="6" fill="#5F7FFF"/>
-  <circle cx="100" cy="100" r="8" fill="#5F7FFF"/>
-  <circle cx="100" cy="150" r="6" fill="#5F7FFF"/>
-  
-  <!-- Left cards (simplified) -->
-  <rect x="20" y="40" width="60" height="30" rx="4" fill="#E8EEFF" stroke="#5F7FFF" stroke-width="1.5"/>
-  <line x1="80" y1="55" x2="94" y2="55" stroke="#5F7FFF" stroke-width="1.5" stroke-linecap="round"/>
-  
-  <rect x="20" y="90" width="60" height="30" rx="4" fill="#E8EEFF" stroke="#5F7FFF" stroke-width="1.5"/>
-  <line x1="80" y1="105" x2="94" y2="105" stroke="#5F7FFF" stroke-width="1.5" stroke-linecap="round"/>
-  
-  <!-- Right cards (simplified) -->
-  <rect x="120" y="140" width="60" height="30" rx="4" fill="#E8EEFF" stroke="#5F7FFF" stroke-width="1.5"/>
-  <line x1="106" y1="155" x2="120" y2="155" stroke="#5F7FFF" stroke-width="1.5" stroke-linecap="round"/>
-  
-  <!-- Text -->
-  <text x="100" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#5F7FFF">TIMELINE</text>
+  <circle cx="100" cy="48" r="10" fill="#0F172A" fill-opacity="0.3"/>
+  <circle cx="100" cy="48" r="6" fill="#FFFFFF"/>
+  <circle cx="100" cy="100" r="13" fill="#0F172A" fill-opacity="0.3"/>
+  <circle cx="100" cy="100" r="8" fill="#FFFFFF"/>
+  <circle cx="100" cy="152" r="10" fill="#0F172A" fill-opacity="0.3"/>
+  <circle cx="100" cy="152" r="6" fill="#FFFFFF"/>
+
+  <!-- Left cards -->
+  <rect x="24" y="32" width="64" height="32" rx="10" fill="#0F172A" fill-opacity="0.2"/>
+  <rect x="20" y="28" width="64" height="32" rx="10" fill="url(#logo-card)"/>
+  <rect x="32" y="40" width="30" height="4" rx="2" fill="#304FFE"/>
+  <rect x="32" y="49" width="40" height="3" rx="1.5" fill="#A5B4FC"/>
+  <path d="M84 44H94" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+
+  <rect x="24" y="84" width="64" height="32" rx="10" fill="#0F172A" fill-opacity="0.2"/>
+  <rect x="20" y="80" width="64" height="32" rx="10" fill="url(#logo-card)"/>
+  <rect x="32" y="92" width="24" height="4" rx="2" fill="#16A34A"/>
+  <rect x="32" y="101" width="40" height="3" rx="1.5" fill="#A5B4FC"/>
+  <path d="M84 96H94" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Right card -->
+  <rect x="116" y="132" width="64" height="32" rx="10" fill="#0F172A" fill-opacity="0.2"/>
+  <rect x="116" y="128" width="64" height="32" rx="10" fill="url(#logo-card)"/>
+  <rect x="128" y="140" width="30" height="4" rx="2" fill="#F59E0B"/>
+  <rect x="128" y="149" width="40" height="3" rx="1.5" fill="#A5B4FC"/>
+  <path d="M106 144H116" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
 </svg>
