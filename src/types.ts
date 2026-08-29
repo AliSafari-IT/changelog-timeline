@@ -32,6 +32,7 @@ export interface ChangelogTimelineProps {
   headerClassName?: string;
   maxVisible?: number;
   showPagination?: boolean;
+  searchable?: boolean;
   /** @default 'left' */
   layout?: 'left' | 'center';
   title?: string;

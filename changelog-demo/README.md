@@ -103,6 +103,7 @@ export function App() {
       layout="center"
       maxVisible={6}
       showPagination
+      searchable
     />
   );
 }

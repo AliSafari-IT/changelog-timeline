@@ -71,6 +71,7 @@ function App() {
       entries={entries}
       maxVisible={8}
       showPagination={true}
+      searchable
     />
   );
 }
@@ -182,6 +183,7 @@ Main timeline component.
 | `headerClassName` | `string` | `''` | Additional CSS class for the header |
 | `maxVisible` | `number` | `8` | Entries per page |
 | `showPagination` | `boolean` | `true` | Show pagination controls |
+| `searchable` | `boolean` | `false` | Show text search across title, description, version, and tags |
 | `layout` | `'left' | 'center'` | `'left'` | Timeline alignment |
 | `title` | `string` | — | Optional timeline heading |
 | `subtitle` | `string` | — | Optional timeline subheading |

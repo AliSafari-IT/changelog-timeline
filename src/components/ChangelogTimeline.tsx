@@ -150,6 +150,19 @@ const Pagination: React.FC<PaginationConfig> = ({
   );
 };
 
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const highlightMatches = (value: string, query: string) => {
+  const terms = query.trim().split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return value;
+
+  const matcher = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
+  return value.split(matcher).map((part, index) =>
+    index % 2 === 1 ? <mark key={`${part}-${index}`}>{part}</mark> : part
+  );
+};
+
 // Timeline Component
 const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   entries,
@@ -157,6 +170,7 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   headerClassName = "",
   maxVisible = 8,
   showPagination = true,
+  searchable = false,
   layout = "left",
   title,
   subtitle,
@@ -165,12 +179,25 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
     "all" | "feature" | "fix" | "improvement" | "security" | "breaking" | "docs"
   >("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredEntries = useMemo(() => {
-    return filter === "all"
-      ? entries
-      : entries.filter((e) => e.category === filter);
-  }, [entries, filter]);
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    return entries.filter((entry) => {
+      const matchesCategory = filter === "all" || entry.category === filter;
+      if (!matchesCategory || !normalizedQuery) return matchesCategory;
+
+      const searchableText = [
+        entry.title,
+        entry.description,
+        entry.version,
+        ...entry.tags,
+      ].join(" ").toLowerCase();
+
+      return searchableText.includes(normalizedQuery);
+    });
+  }, [entries, filter, searchQuery]);
 
   const paginatedEntries = useMemo(() => {
     if (!showPagination) return filteredEntries;
@@ -219,6 +246,25 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
         <h1 className="timeline-title">{title || "📝 Changelog"}</h1>
         <p className="timeline-subtitle">{subtitle || "Track all updates and changes"}</p>
       </div>
+
+      {searchable && (
+        <div className="timeline-search">
+          <label htmlFor="changelog-search">Search changelog</label>
+          <div className="timeline-search__control">
+            <span aria-hidden="true">⌕</span>
+            <input
+              id="changelog-search"
+              type="search"
+              value={searchQuery}
+              placeholder="Search titles, descriptions, versions, or tags"
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="filter-chips">
         <button
@@ -270,7 +316,9 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
                     <div className="card-header">
                       <span className="category-icon">{config.icon}</span>
                       <div className="card-content">
-                        <h3 className="card-title">{entry.title}</h3>
+                        <h3 className="card-title">
+                          {highlightMatches(entry.title, searchable ? searchQuery : "")}
+                        </h3>
                         <div className="card-meta">
                           <span
                             className="category-label"
@@ -290,7 +338,9 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
                             })}
                           </span>
                         </div>
-                        <p className="card-description">{entry.description}</p>
+                        <p className="card-description">
+                          {highlightMatches(entry.description, searchable ? searchQuery : "")}
+                        </p>
                         <div className="card-tags">
                           {entry.tags.map((tag) => (
                             <span key={tag} className="tag">

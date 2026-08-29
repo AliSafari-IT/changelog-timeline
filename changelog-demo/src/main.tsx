@@ -273,6 +273,7 @@ const App = () => {
       entries={sampleChangelog}
       maxVisible={8}
       showPagination={true}
+      searchable
       layout="center"
     />
     <section className="timeline-tutorial">
