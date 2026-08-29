@@ -171,15 +171,19 @@ const App = () => {
     <>
       <GetStartedModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
       <nav className="navbar">
-        <div className="navbar-logo">
-          <img
-            src={`${import.meta.env.BASE_URL}logo.svg`}
-            alt="Logo"
-            className="navbar-logo-img"
-            title="Changelog Timeline Demo"
-          />
-          <span className="navbar-title">Changelog Timeline Demo</span>
-        </div>
+        <div className="navbar-inner">
+          <div className="navbar-logo">
+            <img
+              src={`${import.meta.env.BASE_URL}logo.svg`}
+              alt="Logo"
+              className="navbar-logo-img"
+              title="Changelog Timeline Demo"
+            />
+            <div className="navbar-brand-copy">
+              <span className="navbar-kicker">ASAFARIM / OPEN SOURCE</span>
+              <span className="navbar-title">Changelog Timeline</span>
+            </div>
+          </div>
         <div className="view-switcher" role="tablist" aria-label="Demo views">
           <button
             className={`view-tab ${view === "demo" ? "active" : ""}`}
@@ -257,8 +261,9 @@ const App = () => {
             />
           </svg>
         </button>
-      </div>
-    </nav>
+          </div>
+        </div>
+      </nav>
     {view === "roadmap" ? <Roadmap /> : <main className="app-main">
       <div className="demo-page">
     <ChangelogTimeline
