@@ -1,6 +1,6 @@
 {
   "name": "@asafarim/changelog-timeline",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "Responsive, paginated vertical changelog timeline using ASafariM design tokens",
   "type": "module",
   "main": "./dist/index.cjs",
