@@ -4,7 +4,7 @@ A responsive, paginated vertical changelog timeline component built with React, 
 
 ![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/public/changelog-demo.png?raw=true)
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## Features
@@ -14,7 +14,7 @@ A responsive, paginated vertical changelog timeline component built with React, 
 - ✨ **Vertical timeline layout**
 - 🎨 **Powered by `@asafarim/design-tokens`** – no hard-coded colors
 - 📱 **Fully responsive** - adapts from mobile to desktop
-- 🔄 **Client & server pagination** support
+- 🔄 **Client-side pagination** with configurable page size
 - 🏷️ **Category filtering** with visual badges
 - 📦 **Version grouping** for organized display
 - ♿ **Accessible** - ARIA labels, keyboard navigation, semantic HTML
@@ -148,7 +148,7 @@ This library is **100% token-based**. All colors, spacing, typography, shadows, 
 | **Colors** | `var(--asm-color-brand-primary-600)`, `var(--asm-color-semantic-success)`, `var(--asm-color-text)` |
 | **Spacing** | `var(--asm-space-2)`, `var(--asm-space-4)`, `var(--asm-space-8)` |
 | **Typography** | `var(--asm-font-size-sm)`, `var(--asm-font-size-md)`, `var(--asm-line-height-relaxed)` |
-| **Radius** | `var(--asm-shape-radius-sm)`, `var(--asm-shape-radius-md)` |
+| **Radius** | `var(--asm-radius-sm)`, `var(--asm-radius-md)` |
 | **Shadows** | `var(--asm-effect-shadow-sm)`, `var(--asm-effect-shadow-md)` |
 | **Transitions** | `var(--asm-motion-duration-fast)`, `var(--asm-motion-easing-standard)` |
 
@@ -177,10 +177,14 @@ Main timeline component.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `entries` | `ChangelogEntry[]` | **required** | Array of changelog entries |
+| `entries` | `ChangelogEntry[]` | **required** | Entries displayed in the timeline |
+| `className` | `string` | `''` | Additional CSS class for the timeline |
+| `headerClassName` | `string` | `''` | Additional CSS class for the header |
 | `maxVisible` | `number` | `8` | Entries per page |
 | `showPagination` | `boolean` | `true` | Show pagination controls |
-| `className` | `string` | `''` | Additional CSS class |
+| `layout` | `'left' | 'center'` | `'left'` | Timeline alignment |
+| `title` | `string` | — | Optional timeline heading |
+| `subtitle` | `string` | — | Optional timeline subheading |
 
 ---
 
@@ -207,19 +211,22 @@ interface ChangelogEntry {
 <ChangelogTimeline entries={entries} />
 ```
 
-### With Category Filter
+### With Category Filtering
+
+Category filter chips are included by default:
 
 ```tsx
-<ChangelogTimeline
-  entries={entries}
-/>
+<ChangelogTimeline entries={entries} />
 ```
 
-### Grouped by Version
+### Centered Layout
 
 ```tsx
 <ChangelogTimeline
   entries={entries}
+  layout="center"
+  title="Product updates"
+  subtitle="Fresh releases and fixes"
 />
 ```
 
@@ -233,18 +240,9 @@ interface ChangelogEntry {
 />
 ```
 
-### With Markdown Descriptions
+### Rich Media and Markdown
 
-```tsx
-import { marked } from 'marked';
-
-const entries = data.map(entry => ({
-  ...entry,
-  description: marked(entry.description),
-}));
-
-<ChangelogTimeline entries={entries} />
-```
+Markdown parsing and rich media rendering are planned features. Until then, pass plain text descriptions to `ChangelogTimeline` or preprocess content in your application.
 
 ---
 
@@ -291,6 +289,8 @@ You can extend the theme by overriding token variables:
 
 ## Development
 
+The repository uses PNPM workspaces. CI runs Node.js 20 with pnpm 10.28.2 for reproducible installs and builds.
+
 ### Build
 
 ```bash
@@ -309,16 +309,27 @@ pnpm preview
 pnpm clean
 ```
 
+### Run the demo
+
+```bash
+pnpm demo
+```
+
+The demo builds the library first, then starts Vite at `http://localhost:5187/changelog-timeline/`.
+
 ---
 
 ## Demo App
 
-See `changelog-demo` in this repository for a full working example with:
+The `changelog-demo` app includes:
 
-- Sample data
-- All features demonstrated
+- Live changelog filtering and pagination
 - Light/dark theme toggle
-- Responsive layout
+- Responsive token-based layout
+- `Live Demo` and `Roadmap / Coming Soon` views
+- Roadmap cards for upcoming search, rich media, render slots, feed utilities, and date grouping
+
+The hosted demo is available at [alisafari-it.github.io/changelog-timeline](https://alisafari-it.github.io/changelog-timeline/).
 
 ---
 
