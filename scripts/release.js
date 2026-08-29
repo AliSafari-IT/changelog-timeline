@@ -30,21 +30,28 @@ function bumpVersion(currentVersion) {
 // Function to continue with the release process
 function continueRelease() {
   try {
-    // Try to commit package.json changes if any
-    try {
-      execSync('git add package.json package-lock.json pnpm-lock.yaml 2>/dev/null || true', { stdio: 'pipe' });
+    execSync('git add package.json pnpm-lock.yaml', { stdio: 'inherit' });
+
+    const hasStagedChanges = (() => {
+      try {
+        execSync('git diff --cached --quiet', { stdio: 'ignore' });
+        return false;
+      } catch {
+        return true;
+      }
+    })();
+
+    if (hasStagedChanges) {
       execSync(`git commit -m "chore: bump version to v${version}"`, { stdio: 'inherit' });
-    } catch (commitError) {
-      // No changes to commit is fine, we'll just tag
+    } else {
       console.log('No version changes to commit, proceeding with tag...');
     }
-    
-    // Create and push tag
+
     execSync(`git tag v${version}`, { stdio: 'inherit' });
     execSync('git push', { stdio: 'inherit' });
     execSync('git push --tags', { stdio: 'inherit' });
-    
-    console.log(`✅ Released v${version} successfully!`);
+
+    console.log(`✅ Tagged and pushed v${version}. GitHub Actions will publish it to npm.`);
     rl.close();
     process.exit(0);
   } catch (error) {
