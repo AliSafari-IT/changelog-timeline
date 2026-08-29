@@ -59,8 +59,113 @@ import '@asafarim/changelog-timeline/css';
   );
 };
 
+type View = "demo" | "roadmap";
+
+type RoadmapFeature = {
+  version: string;
+  status: "In Development" | "Planned" | "Under Review";
+  title: string;
+  summary: string;
+  specs: string[];
+};
+
+const roadmapFeatures: RoadmapFeature[] = [
+  {
+    version: "v0.2.0",
+    status: "In Development",
+    title: "Live Search & Text Filtering",
+    summary: "Instant text search across title, description, version, and tag metadata.",
+    specs: [
+      "Add searchable?: boolean to <ChangelogTimeline>.",
+      "Highlight matching keywords inside entry titles and descriptions.",
+      "Combine seamlessly with existing category badges and pagination.",
+    ],
+  },
+  {
+    version: "v0.2.0",
+    status: "Planned",
+    title: "Built-in Markdown & Rich Media Support",
+    summary: "Native parsing for code snippets, external PR links, images, and formatted lists in descriptions without external pre-processing.",
+    specs: [
+      "Out-of-the-box support for code blocks using token-based code styling.",
+      "Auto-link issue numbers, such as #142, to GitHub issue links.",
+      "Support for embedded media including screenshots and micro-GIFs.",
+    ],
+  },
+  {
+    version: "v0.3.0",
+    status: "Under Review",
+    title: "Custom Render Props & Slot APIs",
+    summary: "High-flexibility render slots for complete visual customization of badges, headers, and timeline nodes.",
+    specs: [
+      "renderBadge?: (category: ChangelogCategory) => ReactNode",
+      "renderHeader?: (entry: ChangelogEntry) => ReactNode",
+      "renderMedia?: (entry: ChangelogEntry) => ReactNode",
+    ],
+  },
+  {
+    version: "v0.3.0",
+    status: "Planned",
+    title: "RSS / Atom Feed Utility Export",
+    summary: "A lightweight companion utility to generate feed XML directly from the ChangelogEntry[] array.",
+    specs: [
+      "Export generateRssFeed(entries, options) and generateJsonFeed(entries, options).",
+      "Zero runtime overhead for non-feed implementations.",
+    ],
+  },
+  {
+    version: "v0.4.0",
+    status: "Planned",
+    title: "Date-Based Grouping Separators",
+    summary: "Automatic collapsible year/month header nodes along the timeline spine.",
+    specs: [
+      "Prop groupBy?: 'version' | 'year' | 'month' | 'none'.",
+      "Sticky timeline milestone headers built with token-based depth/elevation.",
+    ],
+  },
+];
+
+const Roadmap = () => (
+  <main className="app-main">
+    <section className="roadmap-page" aria-labelledby="roadmap-title">
+      <header className="roadmap-hero">
+        <p className="roadmap-eyebrow">What&apos;s next</p>
+        <h1 id="roadmap-title">Upcoming Features &amp; Roadmap</h1>
+        <p>
+          A look at the ideas shaping the next releases of @asafarim/changelog-timeline.
+          Plans may evolve as we learn from the community.
+        </p>
+        <div className="roadmap-preview" aria-label="Upcoming search preview">
+          <span className="preview-search-icon" aria-hidden="true">⌕</span>
+          <input type="text" placeholder="Search changelog entries (coming soon)" disabled />
+          <span className="preview-label">Preview</span>
+        </div>
+      </header>
+      <div className="roadmap-grid">
+        {roadmapFeatures.map((feature) => (
+          <article className="roadmap-card" key={feature.title}>
+            <div className="roadmap-card-meta">
+              <span className="roadmap-version">{feature.version}</span>
+              <span className={`roadmap-status roadmap-status-${feature.status.toLowerCase().replace(" ", "-")}`}>
+                {feature.status}
+              </span>
+            </div>
+            <h2>{feature.title}</h2>
+            <p className="roadmap-summary">{feature.summary}</p>
+            <h3>Key specs</h3>
+            <ul>
+              {feature.specs.map((spec) => <li key={spec}>{spec}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+);
+
 const App = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [view, setView] = useState<View>("demo");
 
   return (
     <>
@@ -74,6 +179,26 @@ const App = () => {
             title="Changelog Timeline Demo"
           />
           <span className="navbar-title">Changelog Timeline Demo</span>
+        </div>
+        <div className="view-switcher" role="tablist" aria-label="Demo views">
+          <button
+            className={`view-tab ${view === "demo" ? "active" : ""}`}
+            type="button"
+            role="tab"
+            aria-selected={view === "demo"}
+            onClick={() => setView("demo")}
+          >
+            Live Demo
+          </button>
+          <button
+            className={`view-tab ${view === "roadmap" ? "active" : ""}`}
+            type="button"
+            role="tab"
+            aria-selected={view === "roadmap"}
+            onClick={() => setView("roadmap")}
+          >
+            Roadmap / Coming Soon
+          </button>
         </div>
         <div className="navbar-actions">
           <button
@@ -134,6 +259,8 @@ const App = () => {
         </button>
       </div>
     </nav>
+    {view === "roadmap" ? <Roadmap /> : <main className="app-main">
+      <div className="demo-page">
     <ChangelogTimeline
       title="Changelog Timeline"
       subtitle="Track all changes over time"
@@ -225,6 +352,8 @@ export const ProductChangelog = () => (
         </li>
       </ol>
     </section>
+      </div>
+    </main>}
     {/* </ThemeProvider> */}
     </>
   );
