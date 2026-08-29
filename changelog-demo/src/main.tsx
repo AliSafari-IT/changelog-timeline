@@ -63,7 +63,7 @@ type View = "demo" | "roadmap";
 
 type RoadmapFeature = {
   version: string;
-  status: "In Development" | "Planned" | "Under Review";
+  status: "Shipped" | "In Development" | "Planned" | "Under Review";
   title: string;
   summary: string;
   specs: string[];
@@ -71,14 +71,14 @@ type RoadmapFeature = {
 
 const roadmapFeatures: RoadmapFeature[] = [
   {
-    version: "v0.2.0",
-    status: "In Development",
+    version: "v0.8.0",
+    status: "Shipped",
     title: "Live Search & Text Filtering",
-    summary: "Instant text search across title, description, version, and tag metadata.",
+    summary: "Available now: instant text search across title, description, version, and tag metadata.",
     specs: [
-      "Add searchable?: boolean to <ChangelogTimeline>.",
-      "Highlight matching keywords inside entry titles and descriptions.",
-      "Combine seamlessly with existing category badges and pagination.",
+      "Enable it with searchable?: boolean on <ChangelogTimeline>.",
+      "Matching keywords are highlighted in entry titles and descriptions.",
+      "Works with category badges and pagination, including v-prefixed versions.",
     ],
   },
   {

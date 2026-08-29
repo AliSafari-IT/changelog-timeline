@@ -45,9 +45,9 @@ The live demo shows sample entries with:
 
 ### Roadmap / Coming Soon
 
-The roadmap view presents the planned feature direction for the package:
+The roadmap view presents shipped and planned feature work for the package:
 
-- Live search and text filtering
+- Live search and text filtering, shipped in v0.8.0
 - Markdown and rich media support
 - Custom render props and slot APIs
 - RSS, Atom, and JSON feed utilities

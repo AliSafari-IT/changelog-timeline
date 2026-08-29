@@ -329,7 +329,7 @@ The `changelog-demo` app includes:
 - Light/dark theme toggle
 - Responsive token-based layout
 - `Live Demo` and `Roadmap / Coming Soon` views
-- Roadmap cards for upcoming search, rich media, render slots, feed utilities, and date grouping
+- Roadmap cards for shipped search plus upcoming rich media, render slots, feed utilities, and date grouping
 
 The hosted demo is available at [alisafari-it.github.io/changelog-timeline](https://alisafari-it.github.io/changelog-timeline/).
 
