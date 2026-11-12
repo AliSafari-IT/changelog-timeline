@@ -2,9 +2,10 @@
 
 A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens. See demo at [https://alisafari-it.github.io/changelog-timeline/](https://alisafari-it.github.io/changelog-timeline/).
 
-![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/public/changelog-demo.png?raw=true)
+<!-- The release script pins this URL to the release tag, so every published version keeps its own preview. -->
+[![Changelog Timeline Demo](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/main/changelog-demo/public/changelog-timeline.webp)](https://alisafari-it.github.io/changelog-timeline/)
 
-![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.9.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## Features

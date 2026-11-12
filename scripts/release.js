@@ -27,10 +27,33 @@ function bumpVersion(currentVersion) {
   return currentVersion;
 }
 
+// Point the README preview media and version badge at the version being released.
+// The media URL is pinned to the release tag so each published version (npm and
+// GitHub tag) keeps showing its own image or animation, even after later changes.
+function stampReadme(releaseVersion) {
+  const readmePath = './README.md';
+  const readme = fs.readFileSync(readmePath, 'utf8');
+  const updated = readme
+    .replace(
+      /(raw\.githubusercontent\.com\/AliSafari-IT\/changelog-timeline\/)[^/]+(\/changelog-demo\/public\/)/g,
+      `$1v${releaseVersion}$2`
+    )
+    .replace(
+      /(img\.shields\.io\/badge\/version-)[^-]+(-blue\.svg)/,
+      `$1${releaseVersion}$2`
+    );
+
+  if (updated !== readme) {
+    fs.writeFileSync(readmePath, updated);
+    console.log(`✅ Pinned README preview and badge to v${releaseVersion}`);
+  }
+}
+
 // Function to continue with the release process
 function continueRelease() {
   try {
-    execSync('git add package.json pnpm-lock.yaml', { stdio: 'inherit' });
+    stampReadme(version);
+    execSync('git add package.json pnpm-lock.yaml README.md', { stdio: 'inherit' });
 
     const hasStagedChanges = (() => {
       try {

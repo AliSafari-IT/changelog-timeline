@@ -7,7 +7,7 @@ A Vite + React demo for [`@asafarim/changelog-timeline`](https://www.npmjs.com/p
 
 The app includes a live changelog timeline and a `Roadmap / Coming Soon` view showcasing planned package features.
 
-![Changelog Timeline Demo](https://github.com/AliSafari-IT/changelog-timeline/blob/main/changelog-demo/public/changelog-demo.png?raw=true)
+![Changelog Timeline Demo](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/main/changelog-demo/public/changelog-timeline.webp)
 
 ## Run locally
 
