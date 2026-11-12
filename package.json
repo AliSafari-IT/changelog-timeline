@@ -26,7 +26,7 @@
     "demo": "pnpm build && pnpm --filter @asafarim/changelog-timeline-demo dev",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "pnpm build",
     "deploy": "pnpm build && pnpm --filter @asafarim/changelog-timeline-demo deploy",
     "release": "node scripts/release.js"
   },

@@ -64,7 +64,7 @@ function continueRelease() {
 // Run commands
 (async () => {
   try {
-    execSync('npm run build', { stdio: 'inherit' });
+    execSync('pnpm build', { stdio: 'inherit' });
     
     // Check if tag already exists
     let tagExists = false;
