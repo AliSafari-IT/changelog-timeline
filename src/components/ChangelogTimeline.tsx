@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import type {
   ChangelogEntry,
   ChangelogTimelineProps,
   PaginationConfig,
+  TimelineLayout,
 } from "../types";
 import "../styles/vtimeline.css";
 
@@ -51,6 +52,16 @@ const categoryConfig = {
     label: "Documentation",
   },
 };
+
+const layoutLabels: Record<TimelineLayout, string> = {
+  left: "Left",
+  center: "Center",
+  right: "Right",
+  compact: "Compact",
+  horizontal: "Horizontal",
+};
+
+const allLayouts = Object.keys(layoutLabels) as TimelineLayout[];
 
 // Pagination Component
 const Pagination: React.FC<PaginationConfig> = ({
@@ -172,6 +183,8 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   showPagination = true,
   searchable = false,
   layout = "left",
+  layoutSwitcher = false,
+  onLayoutChange,
   title,
   subtitle,
 }) => {
@@ -180,6 +193,25 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   >("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeLayout, setActiveLayout] = useState<TimelineLayout>(layout);
+
+  // Follow the prop when the host app changes it.
+  useEffect(() => {
+    setActiveLayout(layout);
+  }, [layout]);
+
+  const layoutOptions = useMemo(() => {
+    if (!layoutSwitcher) return [];
+    const options = Array.isArray(layoutSwitcher)
+      ? allLayouts.filter((option) => layoutSwitcher.includes(option))
+      : allLayouts;
+    return options.length > 1 ? options : [];
+  }, [layoutSwitcher]);
+
+  const handleLayoutChange = (newLayout: TimelineLayout) => {
+    setActiveLayout(newLayout);
+    onLayoutChange?.(newLayout);
+  };
 
   const filteredEntries = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -243,7 +275,7 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   const endEntry = Math.min(currentPage * maxVisible, totalCount);
 
   return (
-    <div className={`changelog-timeline changelog-timeline--${layout} ${className}`}>
+    <div className={`changelog-timeline changelog-timeline--${activeLayout} ${className}`}>
       <div className={`timeline-header ${headerClassName}`}>
         <h1 className="timeline-title">{title || "📝 Changelog"}</h1>
         <p className="timeline-subtitle">{subtitle || "Track all updates and changes"}</p>
@@ -265,6 +297,27 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
               }}
             />
           </div>
+        </div>
+      )}
+
+      {layoutOptions.length > 0 && (
+        <div className="layout-switcher" role="group" aria-label="Timeline layout">
+          <span className="layout-switcher__label" aria-hidden="true">
+            Layout
+          </span>
+          {layoutOptions.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={`layout-switcher__option ${
+                activeLayout === option ? "active" : ""
+              }`}
+              aria-pressed={activeLayout === option}
+              onClick={() => handleLayoutChange(option)}
+            >
+              {layoutLabels[option]}
+            </button>
+          ))}
         </div>
       )}
 
@@ -307,12 +360,21 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
             <div className="version-divider" />
           </div>
 
-          <div className="timeline-container">
+          <div
+            className="timeline-container"
+            {...(activeLayout === "horizontal"
+              ? {
+                  tabIndex: 0,
+                  role: "group",
+                  "aria-label": `Version ${version} entries`,
+                }
+              : {})}
+          >
             <div className="timeline-line" />
             {groupedByVersion[version].map((entry, index) => {
               const config = categoryConfig[entry.category];
               const isLeft = index % 2 === 0;
-              const itemClass = layout === "center" 
+              const itemClass = activeLayout === "center"
                 ? isLeft ? "timeline-item--left" : "timeline-item--right"
                 : "";
               return (

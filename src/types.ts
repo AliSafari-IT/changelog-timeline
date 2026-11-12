@@ -17,6 +17,13 @@ export interface ChangelogEntry {
   tags: string[];
 }
 
+export type TimelineLayout =
+  | 'left'
+  | 'center'
+  | 'right'
+  | 'compact'
+  | 'horizontal';
+
 export interface PaginationConfig {
   page: number;  
   /** @default 10 */
@@ -33,8 +40,20 @@ export interface ChangelogTimelineProps {
   maxVisible?: number;
   showPagination?: boolean;
   searchable?: boolean;
-  /** @default 'left' */
-  layout?: 'left' | 'center';
+  /**
+   * Timeline type. With `layoutSwitcher` enabled this is the initial value.
+   * `horizontal` falls back to the left-axis layout on narrow screens.
+   * @default 'left'
+   */
+  layout?: TimelineLayout;
+  /**
+   * Show a control that lets the viewer pick the timeline type.
+   * `true` offers every layout; pass an array to offer a subset.
+   * @default false
+   */
+  layoutSwitcher?: boolean | TimelineLayout[];
+  /** Called when the viewer picks a layout in the switcher. */
+  onLayoutChange?: (layout: TimelineLayout) => void;
   title?: string;
   subtitle?: string;
 }

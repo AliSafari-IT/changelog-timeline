@@ -4,6 +4,10 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: process.env.BASE_PATH || '/changelog-timeline/',
   plugins: [react()],
+  // The library is linked from the workspace root; always use the demo's React.
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   build: {
     outDir: 'dist',
   },

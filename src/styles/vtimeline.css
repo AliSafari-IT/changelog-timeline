@@ -329,6 +329,206 @@
 }
 
 /* =========================
+   RIGHT VARIANT
+   Mirror of the default layout: axis on the right, cards to its left.
+   ========================= */
+
+.changelog-timeline--right .timeline-container {
+  padding-left: 0;
+  padding-right: var(--asm-space-8);
+}
+
+.changelog-timeline--right .timeline-line {
+  left: auto;
+  right: var(--asm-space-2);
+}
+
+.changelog-timeline--right .timeline-item {
+  display: flex;
+  justify-content: flex-end;
+  padding-left: 0;
+  padding-right: var(--asm-space-8);
+}
+
+.changelog-timeline--right .timeline-dot {
+  left: auto;
+  right: calc(-1 * var(--asm-space-6));
+}
+
+/* =========================
+   COMPACT VARIANT
+   Dense rows instead of cards: title and meta on one line,
+   description truncated to a single line, tags hidden.
+   ========================= */
+
+.changelog-timeline--compact .version-section {
+  margin-bottom: var(--asm-space-6);
+}
+
+.changelog-timeline--compact .version-header {
+  margin-bottom: var(--asm-space-2);
+}
+
+.changelog-timeline--compact .timeline-item {
+  margin-bottom: var(--asm-space-2);
+}
+
+.changelog-timeline--compact .timeline-card,
+.changelog-timeline--compact .timeline-card:hover {
+  max-width: none;
+  padding: var(--asm-space-1) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.changelog-timeline--compact .card-header {
+  margin-bottom: 0;
+}
+
+.changelog-timeline--compact .category-icon {
+  font-size: var(--asm-font-size-md);
+  line-height: var(--asm-line-height-tight);
+}
+
+.changelog-timeline--compact .card-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--asm-space-4);
+  align-items: baseline;
+  min-width: 0;
+}
+
+.changelog-timeline--compact .card-title {
+  margin: 0;
+  font-size: var(--asm-font-size-md);
+  line-height: var(--asm-line-height-tight);
+}
+
+.changelog-timeline--compact .card-meta {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.changelog-timeline--compact .card-description {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--asm-font-size-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.changelog-timeline--compact .card-tags {
+  display: none;
+}
+
+/* =========================
+   HORIZONTAL VARIANT
+   Entries of a version run left to right in a scrollable row.
+   The axis is drawn per item so it spans the full scroll width.
+   Desktop only: below 641px the base left-axis layout applies.
+   ========================= */
+
+@media (min-width: 641px) {
+  .changelog-timeline--horizontal .timeline-container {
+    display: flex;
+    gap: var(--timeline-gap);
+    padding: var(--asm-space-1) var(--asm-space-1) var(--asm-space-4);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--asm-space-1);
+  }
+
+  .changelog-timeline--horizontal .timeline-container:focus-visible {
+    outline: 2px solid var(--timeline-primary);
+    outline-offset: 2px;
+  }
+
+  .changelog-timeline--horizontal .timeline-line {
+    display: none;
+  }
+
+  .changelog-timeline--horizontal .timeline-item {
+    flex: 0 0 min(var(--timeline-card-width), 80%);
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-top: var(--asm-space-8);
+    scroll-snap-align: start;
+  }
+
+  .changelog-timeline--horizontal .timeline-item::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--timeline-dot-size) / 2);
+    left: 0;
+    right: calc(-1 * var(--timeline-gap));
+    height: var(--timeline-line-width);
+    background: var(--timeline-border);
+    transform: translateY(-50%);
+  }
+
+  .changelog-timeline--horizontal .timeline-item:last-child::before {
+    right: 0;
+  }
+
+  .changelog-timeline--horizontal .timeline-dot {
+    box-sizing: border-box;
+    top: 0;
+    left: var(--asm-space-5);
+  }
+
+  .changelog-timeline--horizontal .timeline-card {
+    box-sizing: border-box;
+    height: 100%;
+    max-width: none;
+  }
+}
+
+/* =========================
+   Layout switcher
+   ========================= */
+
+.layout-switcher {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--asm-space-1);
+  margin-bottom: var(--asm-space-4);
+}
+
+.layout-switcher__label {
+  margin-right: var(--asm-space-2);
+  color: var(--timeline-text-muted);
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-600);
+}
+
+.layout-switcher__option {
+  padding: var(--asm-space-1) var(--asm-space-3);
+  border: 1px solid var(--timeline-border);
+  border-radius: 8px;
+  background: var(--timeline-bg);
+  color: var(--timeline-text);
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-500);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.layout-switcher__option:hover {
+  border-color: var(--timeline-primary);
+  background: var(--timeline-primary-light);
+}
+
+.layout-switcher__option.active {
+  background: var(--timeline-primary);
+  border-color: var(--timeline-primary);
+  color: var(--color-white, white);
+}
+
+/* =========================
    Pagination
    ========================= */
 
@@ -461,6 +661,21 @@
   .changelog-timeline--center .timeline-item--left .timeline-card::after,
   .changelog-timeline--center .timeline-item--right .timeline-card::before {
     display: none;
+  }
+
+  .changelog-timeline--right .timeline-container,
+  .changelog-timeline--right .timeline-item {
+    padding-left: 0;
+    padding-right: var(--asm-space-6);
+  }
+
+  .changelog-timeline--right .timeline-card {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+
+  .changelog-timeline--compact .card-content {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .pagination {

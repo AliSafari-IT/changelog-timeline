@@ -9,4 +9,5 @@ export type {
   ChangelogTimelineProps,
   TimelineItemProps,
   ChangelogCategory,
+  TimelineLayout,
 } from './types';

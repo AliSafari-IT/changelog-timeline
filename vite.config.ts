@@ -12,7 +12,9 @@ export default defineConfig({
       fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      // Match subpaths too (react/jsx-runtime, react-dom/client) so the
+      // host app's React is used instead of a bundled copy.
+      external: [/^react(\/.*)?$/, /^react-dom(\/.*)?$/],
       output: {
         globals: {
           react: 'React',
