@@ -29,7 +29,7 @@ Or run it from this directory after building the library once:
 pnpm dev
 ```
 
-The demo runs at <http://localhost:5187/changelog-timeline/>.
+The demo runs at <http://localhost:5187/changelog-timeline/>. Add `?layout=horizontal` (or any other type) to open it on a given timeline type.
 
 ## Views
 
@@ -40,13 +40,15 @@ The live demo shows sample entries with:
 - Category filter chips
 - Version grouping
 - Client-side pagination
-- Left and centered timeline layouts
+- Five timeline types (left, center, right, compact, horizontal) with a layout switcher
+- Text search with highlighted matches
 - Light/dark theme switching
 
 ### Roadmap / Coming Soon
 
 The roadmap view presents shipped and planned feature work for the package:
 
+- Timeline types and layout switcher, shipped in v0.9.0
 - Live search and text filtering, shipped in v0.8.0
 - Markdown and rich media support
 - Custom render props and slot APIs
@@ -101,6 +103,7 @@ export function App() {
       title="Product updates"
       subtitle="Fresh releases and fixes"
       layout="center"
+      layoutSwitcher
       maxVisible={6}
       showPagination
       searchable
@@ -133,3 +136,4 @@ pnpm build
 - The timeline stylesheet is required. Import `@asafarim/changelog-timeline/css` once in the app entry point.
 - Descriptions currently accept plain text. Markdown parsing and rich media rendering are roadmap items.
 - The demo uses the workspace version of `@asafarim/changelog-timeline`.
+- The demo runs on React 19; the library supports React 18 and 19.

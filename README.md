@@ -11,7 +11,8 @@ A responsive, paginated vertical changelog timeline component built with React, 
 
 `@asafarim/changelog-timeline` is a lightweight, token-driven React timeline component for changelogs and release notes, with filtering, pagination, and version grouping—packaged as a reusable library with a live demo and GitHub Pages preview.
 
-- ✨ **Vertical timeline layout**
+- ✨ **Five timeline types** - left, center, right, compact, and horizontal
+- 🔀 **Optional layout switcher** so viewers can pick the type they prefer
 - 🎨 **Powered by `@asafarim/design-tokens`** – no hard-coded colors
 - 📱 **Fully responsive** - adapts from mobile to desktop
 - 🔄 **Client-side pagination** with configurable page size
@@ -20,6 +21,7 @@ A responsive, paginated vertical changelog timeline component built with React, 
 - ♿ **Accessible** - ARIA labels, keyboard navigation, semantic HTML
 - 🌗 **Automatic light/dark theme** support via tokens
 - 🎯 **TypeScript** - fully typed API
+- ⚛️ **React 18 and 19** supported
 - 🌳 **Tree-shakable** - import only what you need
 
 ---
