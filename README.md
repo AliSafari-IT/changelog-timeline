@@ -32,6 +32,8 @@ pnpm add @asafarim/changelog-timeline
 
 ### Peer Dependencies
 
+Works with React 18 and React 19.
+
 ```bash
 pnpm add react react-dom
 ```
@@ -81,7 +83,7 @@ function App() {
 
 ## Comprehensive Tutorial: Build a Product Changelog in 5 Steps
 
-> Everything below assumes a React 18 + TypeScript project that already uses PNPM.  
+> Everything below assumes a React 18 or 19 + TypeScript project that already uses PNPM.  
 > The component auto-imports `@asafarim/design-tokens`, so **never hard-code colors, spacing, or typography**.
 
 1. **Install dependencies**
@@ -184,7 +186,9 @@ Main timeline component.
 | `maxVisible` | `number` | `8` | Entries per page |
 | `showPagination` | `boolean` | `true` | Show pagination controls |
 | `searchable` | `boolean` | `false` | Show text search across title, description, version, and tags |
-| `layout` | `'left' | 'center'` | `'left'` | Timeline alignment |
+| `layout` | `'left' \| 'center' \| 'right' \| 'compact' \| 'horizontal'` | `'left'` | Timeline type (see [Timeline Types](#timeline-types)) |
+| `layoutSwitcher` | `boolean \| TimelineLayout[]` | `false` | Show a control that lets the viewer pick the timeline type. Pass an array to offer a subset |
+| `onLayoutChange` | `(layout: TimelineLayout) => void` | — | Called when the viewer picks a type in the switcher |
 | `title` | `string` | — | Optional timeline heading |
 | `subtitle` | `string` | — | Optional timeline subheading |
 
@@ -229,6 +233,42 @@ Category filter chips are included by default:
   layout="center"
   title="Product updates"
   subtitle="Fresh releases and fixes"
+/>
+```
+
+### Timeline Types
+
+| `layout` | Description |
+|----------|-------------|
+| `left` | Axis on the left, cards to its right (default) |
+| `center` | Axis in the middle, cards alternate left and right |
+| `right` | Axis on the right, cards to its left |
+| `compact` | Dense one-line rows without cards, for long changelogs |
+| `horizontal` | Entries of each version run left to right in a scrollable row |
+
+On screens up to 640px wide, `center` and `horizontal` fall back to the single-column left-axis layout.
+
+```tsx
+<ChangelogTimeline entries={entries} layout="horizontal" />
+```
+
+### Let Viewers Choose the Type
+
+`layoutSwitcher` adds a control above the filters. `layout` sets the starting type, and `onLayoutChange` reports each choice so you can save it.
+
+```tsx
+const [layout, setLayout] = useState<TimelineLayout>(
+  () => (localStorage.getItem('changelog-layout') as TimelineLayout) ?? 'center'
+);
+
+<ChangelogTimeline
+  entries={entries}
+  layout={layout}
+  layoutSwitcher={['left', 'center', 'compact']}
+  onLayoutChange={(next) => {
+    setLayout(next);
+    localStorage.setItem('changelog-layout', next);
+  }}
 />
 ```
 

@@ -4,6 +4,7 @@ import "@asafarim/changelog-timeline/css";
 import { sampleChangelog } from "./data/sampleChangelog";
 import "./index.css";
 import { ChangelogTimeline } from "@asafarim/changelog-timeline";
+import type { TimelineLayout } from "@asafarim/changelog-timeline";
 // import ThemeProvider from '@asafarim/react-themes';
 
 const GetStartedModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -61,6 +62,14 @@ import '@asafarim/changelog-timeline/css';
 
 type View = "demo" | "roadmap";
 
+const demoLayouts: TimelineLayout[] = ["left", "center", "right", "compact", "horizontal"];
+
+// Lets a link such as ?layout=horizontal open the demo on a given timeline type.
+const getInitialLayout = (): TimelineLayout => {
+  const requested = new URLSearchParams(window.location.search).get("layout");
+  return demoLayouts.find((option) => option === requested) ?? "center";
+};
+
 type RoadmapFeature = {
   version: string;
   status: "Shipped" | "In Development" | "Planned" | "Under Review";
@@ -70,6 +79,18 @@ type RoadmapFeature = {
 };
 
 const roadmapFeatures: RoadmapFeature[] = [
+  {
+    version: "v0.9.0",
+    status: "Shipped",
+    title: "Timeline Types & Layout Switcher",
+    summary: "Available now: five timeline types and an optional control that lets readers pick the one they prefer.",
+    specs: [
+      "layout?: 'left' | 'center' | 'right' | 'compact' | 'horizontal'.",
+      "Enable the reader-facing control with layoutSwitcher, or pass an array to offer a subset.",
+      "onLayoutChange reports the choice so the host app can persist it.",
+      "Works with React 18 and React 19.",
+    ],
+  },
   {
     version: "v0.8.0",
     status: "Shipped",
@@ -274,7 +295,8 @@ const App = () => {
       maxVisible={8}
       showPagination={true}
       searchable
-      layout="center"
+      layout={getInitialLayout()}
+      layoutSwitcher
     />
     <section className="timeline-tutorial">
       <header>
@@ -290,7 +312,7 @@ const App = () => {
       <ol>
         <li>
           <h3>Install dependencies</h3>
-          <p>Make sure React 18+ is available, then add the timeline package.</p>
+          <p>Make sure React 18 or 19 is available, then add the timeline package.</p>
           <pre>
             <code>{`pnpm add @asafarim/changelog-timeline
 pnpm add react react-dom`}</code>
@@ -343,6 +365,7 @@ export const ProductChangelog = () => (
     title="Product updates"
     subtitle="Fresh releases and fixes"
     layout="center"
+    layoutSwitcher
     maxVisible={6}
     showPagination
   />
