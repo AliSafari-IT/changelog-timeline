@@ -1,10 +1,18 @@
 import React, { useEffect, useState, useMemo } from "react";
 import type {
-  ChangelogEntry,
   ChangelogTimelineProps,
+  EntryStatus,
   PaginationConfig,
   TimelineLayout,
 } from "../types";
+import { STATUS_LABELS } from "../types";
+import {
+  groupKeyOf,
+  normalizeEntries,
+  parseEntryDate,
+  type NormalizedEntry,
+} from "../model/normalize";
+import { compareVersions, isVersionLabel } from "../model/sort";
 import "../styles/vtimeline.css";
 
 // Category colors and icons
@@ -62,6 +70,16 @@ const layoutLabels: Record<TimelineLayout, string> = {
 };
 
 const allLayouts = Object.keys(layoutLabels) as TimelineLayout[];
+
+// How far in the future a status is; newer/future groups are listed first.
+const statusRank: Record<EntryStatus, number> = {
+  shipped: 0,
+  "in-progress": 1,
+  next: 2,
+  idea: 3,
+};
+
+const groupLabel = (key: string) => (isVersionLabel(key) ? `v${key}` : key);
 
 // Pagination Component
 const Pagination: React.FC<PaginationConfig> = ({
@@ -174,6 +192,26 @@ const highlightMatches = (value: string, query: string) => {
   );
 };
 
+// Date for shipped work; quarter and votes for roadmap items.
+const meta = (entry: NormalizedEntry) => {
+  const items: string[] = [];
+  const date = parseEntryDate(entry.date);
+  if (date) {
+    items.push(
+      date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    );
+  }
+  if (entry.quarter) items.push(entry.quarter);
+  if (typeof entry.votes === "number") {
+    items.push(`${entry.votes} ${entry.votes === 1 ? "vote" : "votes"}`);
+  }
+  return items;
+};
+
 // Timeline Component
 const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   entries,
@@ -213,25 +251,29 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
     onLayoutChange?.(newLayout);
   };
 
+  const normalized = useMemo(() => normalizeEntries(entries), [entries]);
+
   const filteredEntries = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
-    return entries.filter((entry) => {
+    return normalized.filter((entry) => {
       const matchesCategory = filter === "all" || entry.category === filter;
       if (!matchesCategory || !normalizedQuery) return matchesCategory;
 
-      const version = entry.version.replace(/^v/i, "");
+      const version = entry.version?.replace(/^v/i, "");
       const searchableText = [
         entry.title,
         entry.description,
-        entry.version,
-        `v${version}`,
+        ...(version ? [version, `v${version}`] : []),
+        entry.milestone ?? "",
+        entry.quarter ?? "",
+        STATUS_LABELS[entry.status],
         ...entry.tags,
       ].join(" ").toLowerCase();
 
       return searchableText.includes(normalizedQuery);
     });
-  }, [entries, filter, searchQuery]);
+  }, [normalized, filter, searchQuery]);
 
   const paginatedEntries = useMemo(() => {
     if (!showPagination) return filteredEntries;
@@ -240,24 +282,25 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
     return filteredEntries.slice(start, end);
   }, [filteredEntries, currentPage, maxVisible, showPagination]);
 
-  // Group by version
+  // Group by version (or milestone / status label for unversioned entries)
   const groupedByVersion = useMemo(() => {
     return paginatedEntries.reduce((acc, entry) => {
-      if (!acc[entry.version]) {
-        acc[entry.version] = [];
+      const key = groupKeyOf(entry);
+      if (!acc[key]) {
+        acc[key] = [];
       }
-      acc[entry.version].push(entry);
+      acc[key].push(entry);
       return acc;
-    }, {} as Record<string, ChangelogEntry[]>);
+    }, {} as Record<string, NormalizedEntry[]>);
   }, [paginatedEntries]);
 
+  // Future work first (ideas, next, in progress), then releases newest first.
   const versions = useMemo(() => {
-    return Object.keys(groupedByVersion).sort((a, b) => {
-      const parseVersion = (v: string) => v.split(".").map(Number);
-      const [aMajor, aMinor, aPatch] = parseVersion(a);
-      const [bMajor, bMinor, bPatch] = parseVersion(b);
-      return bMajor - aMajor || bMinor - aMinor || bPatch - aPatch;
-    });
+    const rankOf = (key: string) =>
+      Math.max(...groupedByVersion[key].map((entry) => statusRank[entry.status]));
+    return Object.keys(groupedByVersion).sort(
+      (a, b) => rankOf(b) - rankOf(a) || compareVersions(b, a)
+    );
   }, [groupedByVersion]);
 
   const handlePageChange = (newPage: number) => {
@@ -356,7 +399,7 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
       {versions.map((version) => (
         <div key={version} className="version-section">
           <div className="version-header">
-            <span className="version-badge">v{version}</span>
+            <span className="version-badge">{groupLabel(version)}</span>
             <div className="version-divider" />
           </div>
 
@@ -400,14 +443,17 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
                           >
                             {config.label}
                           </span>
-                          <span>•</span>
-                          <span>
-                            {new Date(entry.date).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </span>
+                          {entry.status !== "shipped" && (
+                            <span className="status-badge" data-status={entry.status}>
+                              {STATUS_LABELS[entry.status]}
+                            </span>
+                          )}
+                          {meta(entry).map((item) => (
+                            <React.Fragment key={item}>
+                              <span aria-hidden="true">•</span>
+                              <span>{item}</span>
+                            </React.Fragment>
+                          ))}
                         </div>
                         <p className="card-description">
                           {highlightMatches(entry.description, searchable ? searchQuery : "")}

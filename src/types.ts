@@ -7,14 +7,46 @@ export type ChangelogCategory =
   | 'breaking'
   | 'docs';
 
+/**
+ * Where an entry is in its life cycle.
+ * Entries without a status are treated as `'shipped'`, so plain changelogs keep working.
+ */
+export type EntryStatus = 'shipped' | 'in-progress' | 'next' | 'idea';
+
+/** Display order of the statuses (past to future). */
+export const ENTRY_STATUSES: readonly EntryStatus[] = [
+  'shipped',
+  'in-progress',
+  'next',
+  'idea',
+] as const;
+
+/** Default labels for each status. */
+export const STATUS_LABELS: Record<EntryStatus, string> = {
+  shipped: 'Shipped',
+  'in-progress': 'In progress',
+  next: 'Next',
+  idea: 'Ideas',
+};
+
 export interface ChangelogEntry {
   id: string;
-  version: string;
-  date: string;
+  /** Release version, e.g. `'1.2.0'`. Optional for roadmap items that have none yet. */
+  version?: string;
+  /** ISO date (`'2026-11-20'`). Optional for roadmap items; the date line is hidden without one. */
+  date?: string;
   category: ChangelogCategory;
   title: string;
   description: string;
   tags: string[];
+  /** @default 'shipped' */
+  status?: EntryStatus;
+  /** Planning horizon for upcoming work, e.g. `'2026-Q1'`. */
+  quarter?: string;
+  /** Interest signal, mostly for ideas. */
+  votes?: number;
+  /** Group label for entries without a version, e.g. `'2.x'` or `'Later'`. */
+  milestone?: string;
 }
 
 export type TimelineLayout =
