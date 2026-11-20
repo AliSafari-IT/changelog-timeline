@@ -143,6 +143,8 @@ import { RoadmapGraph } from '@asafarim/changelog-timeline';
 | `onSelect` | `(key: string) => void` | — | Called with the version or milestone key the viewer clicks |
 | `selectedKey` | `string` | — | Highlights that version |
 | `title` | `string` | `'Roadmap overview'` | Heading of the graph |
+| `statusLabels` | `Partial<Record<EntryStatus, string>>` | — | Override the band labels, e.g. for translations |
+| `className` | `string` | — | Extra CSS class |
 
 Existing 0.9 changelogs keep working unchanged: entries without `status` count as `shipped`, and the graph only appears once the data holds more than one status.
 
