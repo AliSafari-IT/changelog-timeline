@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "@asafarim/changelog-timeline/css";
 import { sampleChangelog } from "./data/sampleChangelog";
 import "./index.css";
-import { ChangelogTimeline } from "@asafarim/changelog-timeline";
-import type { TimelineLayout } from "@asafarim/changelog-timeline";
+import {
+  ChangelogTimeline,
+  RoadmapGraph,
+  STATUS_LABELS,
+  groupByMilestone,
+  normalizeEntries,
+} from "@asafarim/changelog-timeline";
+import { roadmap, type RoadmapItem } from "./data/roadmap";
+import type { EntryStatus, TimelineLayout } from "@asafarim/changelog-timeline";
 // import ThemeProvider from '@asafarim/react-themes';
 
 const GetStartedModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -70,119 +77,76 @@ const getInitialLayout = (): TimelineLayout => {
   return demoLayouts.find((option) => option === requested) ?? "center";
 };
 
-type RoadmapFeature = {
-  version: string;
-  status: "Shipped" | "In Development" | "Planned" | "Under Review";
-  title: string;
-  summary: string;
-  specs: string[];
+const cardStatusClass: Record<EntryStatus, string> = {
+  shipped: "shipped",
+  "in-progress": "in-development",
+  next: "planned",
+  idea: "under-review",
 };
 
-const roadmapFeatures: RoadmapFeature[] = [
-  {
-    version: "v0.9.0",
-    status: "Shipped",
-    title: "Timeline Types & Layout Switcher",
-    summary: "Available now: five timeline types and an optional control that lets readers pick the one they prefer.",
-    specs: [
-      "layout?: 'left' | 'center' | 'right' | 'compact' | 'horizontal'.",
-      "Enable the reader-facing control with layoutSwitcher, or pass an array to offer a subset.",
-      "onLayoutChange reports the choice so the host app can persist it.",
-      "Works with React 18 and React 19.",
-    ],
-  },
-  {
-    version: "v0.8.0",
-    status: "Shipped",
-    title: "Live Search & Text Filtering",
-    summary: "Available now: instant text search across title, description, version, and tag metadata.",
-    specs: [
-      "Enable it with searchable?: boolean on <ChangelogTimeline>.",
-      "Matching keywords are highlighted in entry titles and descriptions.",
-      "Works with category badges and pagination, including v-prefixed versions.",
-    ],
-  },
-  {
-    version: "v0.2.0",
-    status: "Planned",
-    title: "Built-in Markdown & Rich Media Support",
-    summary: "Native parsing for code snippets, external PR links, images, and formatted lists in descriptions without external pre-processing.",
-    specs: [
-      "Out-of-the-box support for code blocks using token-based code styling.",
-      "Auto-link issue numbers, such as #142, to GitHub issue links.",
-      "Support for embedded media including screenshots and micro-GIFs.",
-    ],
-  },
-  {
-    version: "v0.3.0",
-    status: "Under Review",
-    title: "Custom Render Props & Slot APIs",
-    summary: "High-flexibility render slots for complete visual customization of badges, headers, and timeline nodes.",
-    specs: [
-      "renderBadge?: (category: ChangelogCategory) => ReactNode",
-      "renderHeader?: (entry: ChangelogEntry) => ReactNode",
-      "renderMedia?: (entry: ChangelogEntry) => ReactNode",
-    ],
-  },
-  {
-    version: "v0.3.0",
-    status: "Planned",
-    title: "RSS / Atom Feed Utility Export",
-    summary: "A lightweight companion utility to generate feed XML directly from the ChangelogEntry[] array.",
-    specs: [
-      "Export generateRssFeed(entries, options) and generateJsonFeed(entries, options).",
-      "Zero runtime overhead for non-feed implementations.",
-    ],
-  },
-  {
-    version: "v0.4.0",
-    status: "Planned",
-    title: "Date-Based Grouping Separators",
-    summary: "Automatic collapsible year/month header nodes along the timeline spine.",
-    specs: [
-      "Prop groupBy?: 'version' | 'year' | 'month' | 'none'.",
-      "Sticky timeline milestone headers built with token-based depth/elevation.",
-    ],
-  },
-];
+// The graph first, then the cards with details (newest and upcoming work first).
+const Roadmap = () => {
+  const [selected, setSelected] = useState<string>();
+  const cards = useMemo(
+    () => groupByMilestone(normalizeEntries(roadmap)).reverse(),
+    []
+  );
 
-const Roadmap = () => (
-  <main className="app-main">
-    <section className="roadmap-page" aria-labelledby="roadmap-title">
-      <header className="roadmap-hero">
-        <p className="roadmap-eyebrow">What&apos;s next</p>
-        <h1 id="roadmap-title">Upcoming Features &amp; Roadmap</h1>
-        <p>
-          A look at the ideas shaping the next releases of @asafarim/changelog-timeline.
-          Plans may evolve as we learn from the community.
-        </p>
-        <div className="roadmap-preview" aria-label="Upcoming search preview">
-          <span className="preview-search-icon" aria-hidden="true">⌕</span>
-          <input type="text" placeholder="Search changelog entries (coming soon)" disabled />
-          <span className="preview-label">Preview</span>
+  const select = (key: string) => {
+    setSelected(key);
+    document
+      .getElementById(`roadmap-${key}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <main className="app-main">
+      <section className="roadmap-page" aria-labelledby="roadmap-title">
+        <header className="roadmap-hero">
+          <p className="roadmap-eyebrow">What&apos;s next</p>
+          <h1 id="roadmap-title">Roadmap / Coming soon</h1>
+          <p>
+            What shipped, what comes next and the ideas shaping later releases of
+            @asafarim/changelog-timeline. Pick a version in the graph to jump to its details.
+          </p>
+        </header>
+
+        <RoadmapGraph entries={roadmap} onSelect={select} selectedKey={selected} />
+
+        <div className="roadmap-grid">
+          {cards.flatMap((group) =>
+            group.entries.map((entry, index) => {
+              const item = entry as typeof entry & RoadmapItem;
+              return (
+                <article
+                  className={`roadmap-card ${selected === group.key ? "is-selected" : ""}`}
+                  key={entry.id}
+                  id={index === 0 ? `roadmap-${group.key}` : undefined}
+                >
+                  <div className="roadmap-card-meta">
+                    <span className="roadmap-version">{group.label}</span>
+                    <span
+                      className={`roadmap-status roadmap-status-${cardStatusClass[entry.status]}`}
+                      data-status={entry.status}
+                    >
+                      {STATUS_LABELS[entry.status]}
+                    </span>
+                  </div>
+                  <h2>{entry.title}</h2>
+                  <p className="roadmap-summary">{entry.description}</p>
+                  <h3>Key specs</h3>
+                  <ul>
+                    {item.specs.map((spec) => <li key={spec}>{spec}</li>)}
+                  </ul>
+                </article>
+              );
+            })
+          )}
         </div>
-      </header>
-      <div className="roadmap-grid">
-        {roadmapFeatures.map((feature) => (
-          <article className="roadmap-card" key={feature.title}>
-            <div className="roadmap-card-meta">
-              <span className="roadmap-version">{feature.version}</span>
-              <span className={`roadmap-status roadmap-status-${feature.status.toLowerCase().replace(" ", "-")}`}>
-                {feature.status}
-              </span>
-            </div>
-            <h2>{feature.title}</h2>
-            <p className="roadmap-summary">{feature.summary}</p>
-            <h3>Key specs</h3>
-            <ul>
-              {feature.specs.map((spec) => <li key={spec}>{spec}</li>)}
-            </ul>
-          </article>
-        ))}
-      </div>
-    </section>
-  </main>
-);
+      </section>
+    </main>
+  );
+};
 
 const App = () => {
   const [modalOpen, setModalOpen] = useState(false);

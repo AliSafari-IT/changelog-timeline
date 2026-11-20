@@ -5,7 +5,7 @@ A responsive, paginated vertical changelog timeline component built with React, 
 <!-- The release script pins this URL to the release tag, so every published version keeps its own preview. -->
 [![Changelog Timeline Demo](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v0.9.1/changelog-demo/public/changelog-timeline.webp)](https://alisafari-it.github.io/changelog-timeline/)
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## Features
