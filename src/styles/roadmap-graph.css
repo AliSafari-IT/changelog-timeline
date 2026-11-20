@@ -1,0 +1,297 @@
+/* ==========================================================================
+   RoadmapGraph: Shipped / In progress / Next / Ideas bands over a version axis.
+   Horizontal grid on wide containers, vertical list on narrow ones.
+   Token-only: colours come from the --ct-status-* palette in vtimeline.css.
+   ========================================================================== */
+
+.ct-graph {
+  /* The palette lives on .changelog-timeline; repeat it so the graph also works standalone. */
+  --ct-status-shipped: var(--asm-color-brand-primary-600);
+  --ct-status-in-progress: var(--asm-color-semantic-info);
+  --ct-status-next: var(--asm-color-semantic-warning);
+  --ct-status-idea: var(--asm-color-semantic-success);
+  --ct-graph-col-min: calc(var(--asm-space-16) + var(--asm-space-8));
+  --ct-graph-ink: var(--asm-color-text);
+  --ct-graph-muted: var(--asm-color-text-muted);
+  --ct-graph-surface: var(--asm-color-surface);
+
+  container: ct-graph / inline-size;
+  margin-bottom: var(--asm-space-8);
+  color: var(--ct-graph-ink);
+  font-family: var(--asm-font-family-base);
+}
+
+.changelog-timeline .ct-graph {
+  --ct-status-shipped: var(--timeline-primary);
+}
+
+.ct-graph [data-status="shipped"] { --status-color: var(--ct-status-shipped); }
+.ct-graph [data-status="in-progress"] { --status-color: var(--ct-status-in-progress); }
+.ct-graph [data-status="next"] { --status-color: var(--ct-status-next); }
+.ct-graph [data-status="idea"] { --status-color: var(--ct-status-idea); }
+
+.ct-graph__title {
+  margin: 0 0 var(--asm-space-3);
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-600);
+  color: var(--ct-graph-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ct-graph__scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--asm-space-2);
+}
+
+/* Rows: band label, milestone node, axis, summary. */
+.ct-graph__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--ct-graph-cols), minmax(var(--ct-graph-col-min), 1fr));
+  grid-template-rows: auto auto var(--asm-space-10) auto;
+  column-gap: var(--asm-space-3);
+  row-gap: var(--asm-space-3);
+  min-width: min-content;
+}
+
+.ct-graph__axis {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  align-self: center;
+  position: relative;
+  height: var(--asm-border-thin);
+  margin-right: var(--asm-space-2);
+  background: var(--ct-graph-ink);
+}
+
+.ct-graph__axis::after {
+  content: "";
+  position: absolute;
+  right: calc(-1 * var(--asm-space-2));
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: var(--asm-space-3) solid var(--ct-graph-ink);
+  border-top: var(--asm-space-2) solid transparent;
+  border-bottom: var(--asm-space-2) solid transparent;
+}
+
+.ct-graph__band {
+  grid-row: 1 / span 4;
+  grid-column: var(--ct-graph-start) / span var(--ct-graph-span);
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+}
+
+.ct-graph__band-label,
+.ct-graph__node,
+.ct-graph__summary {
+  border: var(--asm-border-hairline) solid color-mix(in oklab, var(--status-color) 55%, transparent);
+  border-bottom-width: var(--asm-border-thin);
+  border-bottom-color: var(--status-color);
+  border-radius: var(--asm-radius-sm);
+  background: color-mix(in oklab, var(--status-color) 16%, var(--ct-graph-surface));
+  color: color-mix(in oklab, var(--status-color) 60%, var(--ct-graph-ink));
+  font-size: var(--asm-font-size-sm);
+  text-align: center;
+}
+
+.ct-graph__band-label {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  margin: 0;
+  padding: var(--asm-space-3) var(--asm-space-2);
+  font-weight: var(--asm-font-weight-600);
+}
+
+.ct-graph__milestones {
+  display: contents;
+  list-style: none;
+}
+
+.ct-graph__milestone {
+  grid-row: 2 / span 3;
+  display: grid;
+  grid-template-rows: subgrid;
+  justify-items: stretch;
+  scroll-snap-align: center;
+}
+
+.ct-graph__node {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--asm-space-1);
+  padding: var(--asm-space-3) var(--asm-space-2);
+  font: inherit;
+  font-size: var(--asm-font-size-sm);
+  font-weight: var(--asm-font-weight-600);
+  cursor: pointer;
+  transition: background var(--asm-motion-duration-normal) var(--asm-motion-easing-standard),
+    box-shadow var(--asm-motion-duration-normal) var(--asm-motion-easing-standard);
+}
+
+.ct-graph__node:hover {
+  background: color-mix(in oklab, var(--status-color) 28%, var(--ct-graph-surface));
+}
+
+.ct-graph__node:focus-visible {
+  outline: var(--asm-border-thin) solid var(--asm-color-focus-ring);
+  outline-offset: var(--asm-border-thin);
+}
+
+.ct-graph__milestone.is-selected .ct-graph__node {
+  box-shadow: 0 0 0 var(--asm-border-thick) color-mix(in oklab, var(--status-color) 45%, transparent);
+}
+
+.ct-graph__current {
+  padding: 0 var(--asm-space-1);
+  border-radius: var(--asm-radius-full);
+  background: var(--status-color);
+  color: var(--ct-graph-surface);
+  font-size: var(--asm-font-size-xs);
+  font-weight: var(--asm-font-weight-600);
+}
+
+/* Dashed connector from the node, through the axis, to the summary. */
+.ct-graph__tick {
+  position: relative;
+  justify-self: center;
+  width: 0;
+  margin-block: calc(-1 * var(--asm-space-3));
+  border-left: var(--asm-border-thin) dashed color-mix(in oklab, var(--ct-graph-ink) 55%, transparent);
+}
+
+.ct-graph__tick::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--asm-space-3);
+  height: var(--asm-space-3);
+  transform: translate(-50%, -50%);
+  border-radius: var(--asm-radius-full);
+  background: var(--status-color);
+  box-shadow: 0 0 0 var(--asm-border-thin) var(--ct-graph-surface);
+}
+
+.ct-graph__summary {
+  align-self: start;
+  padding: var(--asm-space-2);
+  font-size: var(--asm-font-size-xs);
+  line-height: var(--asm-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+[data-status="idea"] .ct-graph__band-label,
+[data-status="idea"] .ct-graph__node,
+[data-status="idea"] .ct-graph__summary {
+  border-style: dashed;
+  border-bottom-style: solid;
+}
+
+.ct-graph__milestone--earlier .ct-graph__node,
+.ct-graph__milestone--earlier .ct-graph__summary {
+  background: transparent;
+  border-style: dashed;
+  color: var(--ct-graph-muted);
+}
+
+.ct-graph__milestone--earlier .ct-graph__tick::after {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--asm-border-thin) var(--status-color);
+}
+
+.ct-graph__summary.is-clickable {
+  cursor: pointer;
+}
+
+/* ---- Narrow containers: vertical axis, bands become section headings ---- */
+@container ct-graph (max-width: 640px) {
+  .ct-graph__scroller {
+    overflow: visible;
+  }
+
+  .ct-graph__grid {
+    display: block;
+    min-width: 0;
+  }
+
+  .ct-graph__axis {
+    display: none;
+  }
+
+  .ct-graph__band {
+    display: block;
+    margin-bottom: var(--asm-space-4);
+  }
+
+  .ct-graph__band-label {
+    text-align: left;
+    padding: var(--asm-space-2) var(--asm-space-3);
+    margin-bottom: var(--asm-space-2);
+  }
+
+  .ct-graph__milestones {
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 var(--asm-space-6);
+  }
+
+  /* The axis runs down the left of each band. */
+  .ct-graph__milestones::before {
+    content: "";
+    position: absolute;
+    left: var(--asm-space-2);
+    top: 0;
+    bottom: 0;
+    border-left: var(--asm-border-thin) solid var(--ct-graph-ink);
+  }
+
+  .ct-graph__milestone {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(max-content, auto) 1fr;
+    grid-template-rows: auto;
+    gap: var(--asm-space-2);
+    align-items: stretch;
+    margin-bottom: var(--asm-space-2);
+  }
+
+  .ct-graph__node {
+    justify-content: flex-start;
+  }
+
+  .ct-graph__summary {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+
+  /* The tick becomes the dot on the vertical axis. */
+  .ct-graph__tick {
+    position: absolute;
+    left: calc(-1 * var(--asm-space-4) - var(--asm-border-hairline));
+    top: 50%;
+    margin: 0;
+    border: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-graph__node {
+    transition: none;
+  }
+}
+
+/* Classic layouts: highlight the group picked in the graph. */
+.version-section.is-highlighted .version-badge {
+  box-shadow: 0 0 0 var(--asm-border-thick) var(--timeline-primary-light);
+}

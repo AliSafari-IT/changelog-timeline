@@ -11,6 +11,8 @@ export interface LayoutProps {
   entries: NormalizedEntry[];
   /** Search query to highlight in cards. */
   query: string;
+  /** Group picked in the roadmap graph (version, milestone or status label). */
+  selectedKey?: string;
 }
 
 export interface LayoutDefinition {
