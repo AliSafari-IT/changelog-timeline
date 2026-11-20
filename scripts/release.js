@@ -35,13 +35,19 @@ function stampReadme(releaseVersion) {
   const readme = fs.readFileSync(readmePath, 'utf8');
   const updated = readme
     .replace(
-      /(raw\.githubusercontent\.com\/AliSafari-IT\/changelog-timeline\/)[^/]+(\/changelog-demo\/public\/)/g,
+      /(raw\.githubusercontent\.com\/AliSafari-IT\/changelog-timeline\/)[^/]+(\/(?:changelog-demo\/public|docs\/screenshots)\/)/g,
       `$1v${releaseVersion}$2`
     )
     .replace(
       /(img\.shields\.io\/badge\/version-)[^-]+(-blue\.svg)/,
       `$1${releaseVersion}$2`
     );
+
+  // Each release keeps its own screenshots in docs/screenshots/v<version>/ so older
+  // READMEs never show newer images. Remind the releaser when this version has none.
+  if (!fs.existsSync(`./docs/screenshots/v${releaseVersion}`)) {
+    console.warn(`⚠️  No docs/screenshots/v${releaseVersion}/ folder. Add this version's screenshots and link them in README.md.`);
+  }
 
   if (updated !== readme) {
     fs.writeFileSync(readmePath, updated);

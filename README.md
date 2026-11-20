@@ -2,8 +2,8 @@
 
 A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens. See demo at [https://alisafari-it.github.io/changelog-timeline/](https://alisafari-it.github.io/changelog-timeline/).
 
-<!-- The release script pins this URL to the release tag, so every published version keeps its own preview. -->
-[![Changelog Timeline Demo](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v0.9.1/changelog-demo/public/changelog-timeline.webp)](https://alisafari-it.github.io/changelog-timeline/)
+<!-- Screenshots live in docs/screenshots/v<version>/ and are linked through the release tag, so each published version keeps showing its own screenshots. -->
+[![Roadmap overview graph in Changelog Timeline 1.2.0](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/roadmap-light.png)](https://alisafari-it.github.io/changelog-timeline/)
 
 ![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
@@ -12,18 +12,32 @@ A responsive, paginated vertical changelog timeline component built with React, 
 
 `@asafarim/changelog-timeline` is a lightweight, token-driven React timeline component for changelogs and release notes, with filtering, pagination, and version grouping—packaged as a reusable library with a live demo and GitHub Pages preview.
 
+- 🗺️ **Roadmap support** - entries carry a `status` (`shipped`, `in-progress`, `next`, `idea`), and `version` and `date` are optional for planned work
+- 📊 **Roadmap overview graph** - Shipped / Next / Ideas bands over a version axis, shown above the cards
 - ✨ **Five timeline types** - left, center, right, compact, and horizontal
 - 🔀 **Optional layout switcher** so viewers can pick the type they prefer
 - 🎨 **Powered by `@asafarim/design-tokens`** – no hard-coded colors
 - 📱 **Fully responsive** - adapts from mobile to desktop
 - 🔄 **Client-side pagination** with configurable page size
-- 🏷️ **Category filtering** with visual badges
+- 🏷️ **Category and status filtering** with visual badges
 - 📦 **Version grouping** for organized display
 - ♿ **Accessible** - ARIA labels, keyboard navigation, semantic HTML
 - 🌗 **Automatic light/dark theme** support via tokens
 - 🎯 **TypeScript** - fully typed API
 - ⚛️ **React 18 and 19** supported
 - 🌳 **Tree-shakable** - import only what you need
+
+---
+
+## Screenshots (1.2.0)
+
+| Changelog, light | Changelog, dark |
+|---|---|
+| ![Changelog timeline in light theme](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/changelog-light.png) | ![Changelog timeline in dark theme](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/changelog-dark.png) |
+
+| Roadmap, dark | Roadmap on a phone |
+|---|---|
+| ![Roadmap overview graph in dark theme](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/roadmap-dark.png) | ![Roadmap overview graph on a 390px phone, axis turned vertical](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/roadmap-phone.png) |
 
 ---
 
@@ -81,6 +95,70 @@ function App() {
   );
 }
 ```
+
+---
+
+## Roadmap and Coming Soon
+
+Since 1.1.0 the same component renders a roadmap. Give entries a `status`; planned work can leave out `version` and `date`, and can group under a `milestone` (for example `2.x`) instead.
+
+```tsx
+const roadmap: ChangelogEntry[] = [
+  { id: 'r1', version: '1.2.0', date: '2026-11-20', status: 'shipped',
+    category: 'feature', title: 'Roadmap graph', description: 'Shipped, Next and Ideas bands.', tags: [] },
+  { id: 'r2', version: '1.3.0', status: 'next', quarter: 'Q1 2027',
+    category: 'feature', title: 'Board layout', description: 'Kanban columns per status.', tags: ['layout'] },
+  { id: 'r3', milestone: '2.x', status: 'idea', votes: 12,
+    category: 'feature', title: 'Markdown descriptions', description: 'Opt-in markdown renderer.', tags: [] },
+];
+
+<ChangelogTimeline entries={roadmap} title="Roadmap" />
+```
+
+When the entries hold more than one status, the timeline shows:
+
+1. the **Roadmap overview** graph first (click a version to jump to its cards),
+2. status filter chips next to the category chips,
+3. the cards, each with a status badge and its quarter and votes.
+
+```mermaid
+flowchart LR
+  subgraph Shipped
+    A[1.1.0] --> B[1.2.0 Current]
+  end
+  subgraph Next
+    C[1.3.0] --> D[1.4.0]
+  end
+  subgraph Ideas
+    E[2.x]
+  end
+  B --> C --> E
+```
+
+The graph shows the newest shipped versions (3 by default, `roadmapGraphMaxShipped`) and folds older ones into "+N earlier". Below 640px the axis turns vertical. Use `roadmapGraph={false}` to hide it, or `roadmapGraph` to force it on.
+
+You can also render the graph on its own, for a Coming soon page that has its own cards:
+
+```tsx
+import { RoadmapGraph } from '@asafarim/changelog-timeline';
+
+<RoadmapGraph
+  entries={roadmap}
+  onSelect={(key) => document.getElementById(`roadmap-${key}`)?.scrollIntoView()}
+/>
+```
+
+| `RoadmapGraph` prop | Type | Default | Description |
+|---------------------|------|---------|-------------|
+| `entries` | `ChangelogEntry[]` | **required** | Entries to plot |
+| `maxShipped` | `number` | `3` | Shipped versions shown before folding into "+N earlier" |
+| `onSelect` | `(key: string) => void` | — | Called with the version or milestone key the viewer clicks |
+| `selectedKey` | `string` | — | Highlights that version |
+| `title` | `string` | `'Roadmap overview'` | Heading of the graph |
+| `statusLabels` | `Partial<Record<EntryStatus, string>>` | — | Override the band labels, e.g. for translations |
+| `className` | `string` | — | Extra CSS class |
+
+Existing 0.9 changelogs keep working unchanged: entries without `status` count as `shipped`, and the graph only appears once the data holds more than one status.
 
 ---
 
@@ -194,6 +272,8 @@ Main timeline component.
 | `onLayoutChange` | `(layout: TimelineLayout) => void` | — | Called when the viewer picks a type in the switcher |
 | `title` | `string` | — | Optional timeline heading |
 | `subtitle` | `string` | — | Optional timeline subheading |
+| `roadmapGraph` | `boolean` | auto | Show the Roadmap overview graph above the cards. Defaults to on when entries hold more than one `status` |
+| `roadmapGraphMaxShipped` | `number` | `3` | Shipped versions shown in the graph before older ones fold into "+N earlier" |
 
 ---
 
@@ -202,14 +282,29 @@ Main timeline component.
 ```typescript
 interface ChangelogEntry {
   id: string;
-  version: string;
-  date: string; // ISO 8601 format
+  version?: string;      // optional for planned work
+  date?: string;         // ISO 8601, optional for planned work
   category: 'feature' | 'fix' | 'improvement' | 'security' | 'breaking' | 'docs';
   title: string;
   description: string;
   tags: string[];
+  status?: 'shipped' | 'in-progress' | 'next' | 'idea'; // default 'shipped'
+  milestone?: string;    // groups entries without a version, e.g. '2.x'
+  quarter?: string;      // e.g. 'Q1 2027'
+  votes?: number;
 }
 ```
+
+### Other exports
+
+| Export | Purpose |
+|--------|---------|
+| `RoadmapGraph` | The roadmap overview graph on its own |
+| `ENTRY_STATUSES`, `STATUS_LABELS` | The status values and their labels (Shipped, In progress, Next, Ideas) |
+| `normalizeEntries`, `groupKeyOf`, `compareVersions` | Fill defaults, group keys and semver-aware sorting |
+| `groupByVersion`, `groupByMilestone`, `groupByStatus`, `groupByStatusAndCategory`, `useGroupLimit` | Grouping helpers for custom layouts |
+| `useTimelineState` | Search, category, status, layout and pagination state, for building your own view |
+
 ---
 
 ## Usage Examples
@@ -334,7 +429,7 @@ You can extend the theme by overriding token variables:
 
 ## Development
 
-The repository uses PNPM workspaces. CI runs Node.js 20 with pnpm 10.28.2 for reproducible installs and builds.
+The repository uses PNPM workspaces. CI runs Node.js 26 with pnpm 12.21.0 for reproducible installs and builds.
 
 ### Build
 
@@ -348,10 +443,21 @@ pnpm build
 pnpm preview
 ```
 
+### Screenshots for a release
+
+Every release gets its own folder, `docs/screenshots/v<version>/`, and the README links those files through the release tag (`raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v<version>/docs/screenshots/v<version>/...`). Never overwrite an older folder: that keeps every published README showing the screenshots of its own version. `pnpm release` re-pins the tag in the links and warns when the folder for the new version is missing.
+
 ### Clean
 
 ```bash
 pnpm clean
+```
+
+### Test
+
+```bash
+pnpm test        # Vitest
+pnpm typecheck
 ```
 
 ### Run the demo
@@ -372,9 +478,15 @@ The `changelog-demo` app includes:
 - Light/dark theme toggle
 - Responsive token-based layout
 - `Live Demo` and `Roadmap / Coming Soon` views
-- Roadmap cards for shipped search plus upcoming rich media, render slots, feed utilities, and date grouping
+- A Roadmap tab built from this package's own roadmap: the overview graph first, then a card per version
 
 The hosted demo is available at [alisafari-it.github.io/changelog-timeline](https://alisafari-it.github.io/changelog-timeline/).
+
+---
+
+## Versioning
+
+The package follows semver from 1.0.0: each new feature adds a minor version (1.2.0 → 1.3.0), and each change within a shipped feature adds a patch (1.2.0 → 1.2.1). The library and the demo share one version.
 
 ---
 
