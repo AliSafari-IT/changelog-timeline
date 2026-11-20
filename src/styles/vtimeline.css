@@ -755,3 +755,27 @@
 .empty-state strong {
   color: var(--timeline-text);
 }
+
+/* Roadmap status badge (shown for anything not yet shipped). */
+.status-badge {
+  --status-color: var(--asm-color-semantic-info);
+  padding: var(--asm-space-1) var(--asm-space-2);
+  border-radius: var(--asm-radius-full);
+  font-weight: var(--asm-font-weight-500);
+  color: var(--status-color);
+  background: color-mix(in oklab, var(--status-color) 12%, transparent);
+  border: var(--asm-border-hairline) solid color-mix(in oklab, var(--status-color) 40%, transparent);
+}
+
+.status-badge[data-status="next"] {
+  --status-color: var(--asm-color-semantic-warning);
+}
+
+.status-badge[data-status="idea"] {
+  --status-color: var(--asm-color-semantic-success);
+  border-style: dashed;
+}
+
+.card-meta {
+  flex-wrap: wrap;
+}
