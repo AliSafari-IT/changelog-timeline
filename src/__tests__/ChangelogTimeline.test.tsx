@@ -105,3 +105,35 @@ describe('roadmap entries', () => {
     expect(screen.getByText('Board layout')).toBeTruthy();
   });
 });
+
+describe('status chips', () => {
+  it('are hidden for plain changelogs', () => {
+    render(<ChangelogTimeline entries={entries} />);
+    expect(screen.queryByRole('group', { name: 'Status' })).toBeNull();
+  });
+
+  it('filter by status when the data has several', () => {
+    render(
+      <ChangelogTimeline
+        entries={[
+          ...entries,
+          { id: 'n', category: 'feature', title: 'Planned', description: '', tags: [], status: 'next' },
+        ]}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByText('Planned')).toBeTruthy();
+    expect(screen.queryByText('Add search')).toBeNull();
+  });
+
+  it('gives each search box its own id', () => {
+    render(
+      <>
+        <ChangelogTimeline entries={entries} searchable />
+        <ChangelogTimeline entries={entries} searchable />
+      </>
+    );
+    const [a, b] = screen.getAllByLabelText('Search changelog');
+    expect(a.id).not.toBe(b.id);
+  });
+});

@@ -1,218 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
-import type {
-  ChangelogTimelineProps,
-  EntryStatus,
-  PaginationConfig,
-  TimelineLayout,
-} from "../types";
+import React, { useId, useMemo, useRef } from "react";
+import type { ChangelogTimelineProps } from "../types";
 import { STATUS_LABELS } from "../types";
-import {
-  groupKeyOf,
-  normalizeEntries,
-  parseEntryDate,
-  type NormalizedEntry,
-} from "../model/normalize";
-import { compareVersions, isVersionLabel } from "../model/sort";
+import { CATEGORIES, CATEGORY_CONFIG } from "../model/categories";
+import { useTimelineState } from "../hooks/useTimelineState";
+import { ALL_LAYOUTS, LAYOUTS } from "../layouts/registry";
+import Pagination from "./Pagination";
 import "../styles/vtimeline.css";
 
-// Category colors and icons
-const categoryConfig = {
-  feature: {
-    color: "var(--category-feature-icon)",
-    bgColor: "var(--category-feature-bg)",
-    textColor: "var(--category-feature-text)",
-    icon: "✨",
-    label: "Feature",
-  },
-  fix: {
-    color: "var(--category-fix-icon)",
-    bgColor: "var(--category-fix-bg)",
-    textColor: "var(--category-fix-text)",
-    icon: "🐛",
-    label: "Bug Fix",
-  },
-  improvement: {
-    color: "var(--category-improvement-icon)",
-    bgColor: "var(--category-improvement-bg)",
-    textColor: "var(--category-improvement-text)",
-    icon: "⚡",
-    label: "Improvement",
-  },
-  breaking: {
-    color: "var(--category-breaking-icon)",
-    bgColor: "var(--category-breaking-bg)",
-    textColor: "var(--category-breaking-text)",
-    icon: "⚠️",
-    label: "Breaking Change",
-  },
-  security: {
-    color: "var(--category-security-icon)",
-    bgColor: "var(--category-security-bg)",
-    textColor: "var(--category-security-text)",
-    icon: "🔒",
-    label: "Security",
-  },
-  docs: {
-    color: "var(--category-docs-icon)",
-    bgColor: "var(--category-docs-bg)",
-    textColor: "var(--category-docs-text)",
-    icon: "📚",
-    label: "Documentation",
-  },
-};
-
-const layoutLabels: Record<TimelineLayout, string> = {
-  left: "Left",
-  center: "Center",
-  right: "Right",
-  compact: "Compact",
-  horizontal: "Horizontal",
-};
-
-const allLayouts = Object.keys(layoutLabels) as TimelineLayout[];
-
-// How far in the future a status is; newer/future groups are listed first.
-const statusRank: Record<EntryStatus, number> = {
-  shipped: 0,
-  "in-progress": 1,
-  next: 2,
-  idea: 3,
-};
-
-const groupLabel = (key: string) => (isVersionLabel(key) ? `v${key}` : key);
-
-// Pagination Component
-const Pagination: React.FC<PaginationConfig> = ({
-  page,
-  pageSize,
-  totalCount,
-  categoryFilter: mode,
-  onPageChange,
-}) => {
-  const totalPages = Math.ceil(totalCount / pageSize);
-
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-    const maxVisible = 5;
-
-    if (totalPages <= maxVisible + 2) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-
-      if (page > 3) {
-        pages.push("...");
-      }
-
-      let start = Math.max(2, page - 1);
-      let end = Math.min(totalPages - 1, page + 1);
-
-      if (page <= 3) {
-        end = Math.min(maxVisible - 1, totalPages - 1);
-      }
-
-      if (page >= totalPages - 2) {
-        start = Math.max(2, totalPages - (maxVisible - 2));
-      }
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (page < totalPages - 2) {
-        pages.push("...");
-      }
-
-      pages.push(totalPages);
-    }
-
-    return pages;
-  };
-
-  return (
-    <div className="pagination">
-      <div className="pagination-meta">
-        Showing: <strong>{mode}</strong>
-      </div>
-      <button
-        className="pagination-btn"
-        onClick={() => onPageChange(page - 1)}
-        disabled={page === 1}
-        aria-label="Previous page"
-      >
-        ← Previous
-      </button>
-
-      <div className="pagination-numbers">
-        {getPageNumbers().map((pageNum, idx) =>
-          typeof pageNum === "number" ? (
-            <button
-              key={`page-${pageNum}`}
-              className={`pagination-number ${
-                page === pageNum ? "active" : ""
-              }`}
-              onClick={() => onPageChange(pageNum)}
-              aria-label={`Go to page ${pageNum}`}
-              aria-current={page === pageNum ? "page" : undefined}
-            >
-              {pageNum}
-            </button>
-          ) : (
-            <span key={`ellipsis-${idx}`} className="pagination-ellipsis">
-              {pageNum}
-            </span>
-          )
-        )}
-      </div>
-
-      <button
-        className="pagination-btn"
-        onClick={() => onPageChange(page + 1)}
-        disabled={page === totalPages}
-        aria-label="Next page"
-      >
-        Next →
-      </button>
-    </div>
-  );
-};
-
-const escapeRegExp = (value: string) =>
-  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-const highlightMatches = (value: string, query: string) => {
-  const terms = query.trim().split(/\s+/).filter(Boolean);
-  if (terms.length === 0) return value;
-
-  const matcher = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
-  return value.split(matcher).map((part, index) =>
-    index % 2 === 1 ? <mark key={`${part}-${index}`}>{part}</mark> : part
-  );
-};
-
-// Date for shipped work; quarter and votes for roadmap items.
-const meta = (entry: NormalizedEntry) => {
-  const items: string[] = [];
-  const date = parseEntryDate(entry.date);
-  if (date) {
-    items.push(
-      date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    );
-  }
-  if (entry.quarter) items.push(entry.quarter);
-  if (typeof entry.votes === "number") {
-    items.push(`${entry.votes} ${entry.votes === 1 ? "vote" : "votes"}`);
-  }
-  return items;
-};
-
-// Timeline Component
 const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   entries,
   className = "",
@@ -226,99 +20,43 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   title,
   subtitle,
 }) => {
-  const [filter, setFilter] = useState<
-    "all" | "feature" | "fix" | "improvement" | "security" | "breaking" | "docs"
-  >("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeLayout, setActiveLayout] = useState<TimelineLayout>(layout);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const searchId = useId();
 
-  // Follow the prop when the host app changes it.
-  useEffect(() => {
-    setActiveLayout(layout);
-  }, [layout]);
+  const state = useTimelineState(entries, {
+    pageSize: maxVisible,
+    paginate: showPagination,
+    initialLayout: layout,
+    onLayoutChange,
+  });
+
+  const definition = LAYOUTS[state.layout] ?? LAYOUTS.left;
+  const isClassic = definition.kind === "classic";
+  const paginated = showPagination && isClassic;
 
   const layoutOptions = useMemo(() => {
     if (!layoutSwitcher) return [];
     const options = Array.isArray(layoutSwitcher)
-      ? allLayouts.filter((option) => layoutSwitcher.includes(option))
-      : allLayouts;
+      ? layoutSwitcher.filter((option) => ALL_LAYOUTS.includes(option))
+      : ALL_LAYOUTS;
     return options.length > 1 ? options : [];
   }, [layoutSwitcher]);
 
-  const handleLayoutChange = (newLayout: TimelineLayout) => {
-    setActiveLayout(newLayout);
-    onLayoutChange?.(newLayout);
-  };
-
-  const normalized = useMemo(() => normalizeEntries(entries), [entries]);
-
-  const filteredEntries = useMemo(() => {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
-
-    return normalized.filter((entry) => {
-      const matchesCategory = filter === "all" || entry.category === filter;
-      if (!matchesCategory || !normalizedQuery) return matchesCategory;
-
-      const version = entry.version?.replace(/^v/i, "");
-      const searchableText = [
-        entry.title,
-        entry.description,
-        ...(version ? [version, `v${version}`] : []),
-        entry.milestone ?? "",
-        entry.quarter ?? "",
-        STATUS_LABELS[entry.status],
-        ...entry.tags,
-      ].join(" ").toLowerCase();
-
-      return searchableText.includes(normalizedQuery);
-    });
-  }, [normalized, filter, searchQuery]);
-
-  const paginatedEntries = useMemo(() => {
-    if (!showPagination) return filteredEntries;
-    const start = (currentPage - 1) * maxVisible;
-    const end = start + maxVisible;
-    return filteredEntries.slice(start, end);
-  }, [filteredEntries, currentPage, maxVisible, showPagination]);
-
-  // Group by version (or milestone / status label for unversioned entries)
-  const groupedByVersion = useMemo(() => {
-    return paginatedEntries.reduce((acc, entry) => {
-      const key = groupKeyOf(entry);
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(entry);
-      return acc;
-    }, {} as Record<string, NormalizedEntry[]>);
-  }, [paginatedEntries]);
-
-  // Future work first (ideas, next, in progress), then releases newest first.
-  const versions = useMemo(() => {
-    const rankOf = (key: string) =>
-      Math.max(...groupedByVersion[key].map((entry) => statusRank[entry.status]));
-    return Object.keys(groupedByVersion).sort(
-      (a, b) => rankOf(b) - rankOf(a) || compareVersions(b, a)
-    );
-  }, [groupedByVersion]);
-
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    state.setPage(newPage);
+    rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const handleFilterChange = (newFilter: typeof filter) => {
-    setFilter(newFilter);
-    setCurrentPage(1);
-  };
-
-  const totalCount = filteredEntries.length;
-  const startEntry = (currentPage - 1) * maxVisible + 1;
-  const endEntry = Math.min(currentPage * maxVisible, totalCount);
+  const { totalCount, page, pageSize, category } = state;
+  const startEntry = (page - 1) * pageSize + 1;
+  const endEntry = Math.min(page * pageSize, totalCount);
+  const LayoutComponent = definition.Component;
 
   return (
-    <div className={`changelog-timeline changelog-timeline--${activeLayout} ${className}`}>
+    <div
+      ref={rootRef}
+      className={`changelog-timeline changelog-timeline--${state.layout} ${className}`}
+    >
       <div className={`timeline-header ${headerClassName}`}>
         <h1 className="timeline-title">{title || "📝 Changelog"}</h1>
         <p className="timeline-subtitle">{subtitle || "Track all updates and changes"}</p>
@@ -326,18 +64,15 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
 
       {searchable && (
         <div className="timeline-search">
-          <label htmlFor="changelog-search">Search changelog</label>
+          <label htmlFor={searchId}>Search changelog</label>
           <div className="timeline-search__control">
             <span aria-hidden="true">⌕</span>
             <input
-              id="changelog-search"
+              id={searchId}
               type="search"
-              value={searchQuery}
+              value={state.query}
               placeholder="Search titles, descriptions, versions, or tags"
-              onChange={(event) => {
-                setSearchQuery(event.target.value);
-                setCurrentPage(1);
-              }}
+              onChange={(event) => state.setQuery(event.target.value)}
             />
           </div>
         </div>
@@ -353,12 +88,37 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
               key={option}
               type="button"
               className={`layout-switcher__option ${
-                activeLayout === option ? "active" : ""
+                state.layout === option ? "active" : ""
               }`}
-              aria-pressed={activeLayout === option}
-              onClick={() => handleLayoutChange(option)}
+              aria-pressed={state.layout === option}
+              onClick={() => state.setLayout(option)}
             >
-              {layoutLabels[option]}
+              {LAYOUTS[option].label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {state.statuses.length > 1 && (
+        <div className="filter-chips filter-chips--status" role="group" aria-label="Status">
+          <button
+            type="button"
+            className={`filter-chip ${state.status === "all" ? "active" : ""}`}
+            aria-pressed={state.status === "all"}
+            onClick={() => state.setStatus("all")}
+          >
+            All statuses
+          </button>
+          {state.statuses.map((status) => (
+            <button
+              key={status}
+              type="button"
+              data-status={status}
+              className={`filter-chip ${state.status === status ? "active" : ""}`}
+              aria-pressed={state.status === status}
+              onClick={() => state.setStatus(status)}
+            >
+              {STATUS_LABELS[status]}
             </button>
           ))}
         </div>
@@ -366,121 +126,50 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
 
       <div className="filter-chips">
         <button
-          className={`filter-chip ${filter === "all" ? "active" : ""}`}
-          onClick={() => handleFilterChange("all")}
+          className={`filter-chip ${category === "all" ? "active" : ""}`}
+          onClick={() => state.setCategory("all")}
         >
           All
         </button>
-        {Object.entries(categoryConfig).map(([key, config]) => (
+        {CATEGORIES.map((key) => (
           <button
             key={key}
-            className={`filter-chip ${filter === key ? "active" : ""}`}
-            onClick={() => handleFilterChange(key as typeof filter)}
+            className={`filter-chip ${category === key ? "active" : ""}`}
+            onClick={() => state.setCategory(key)}
           >
-            {config.icon} {config.label}
+            {CATEGORY_CONFIG[key].icon} {CATEGORY_CONFIG[key].label}
           </button>
         ))}
       </div>
 
-      {showPagination && totalCount > 0 && (
+      {paginated && totalCount > 0 && (
         <div className="results-info">
           Showing {startEntry}-{endEntry} of {totalCount}{" "}
-          {filter === "all" ? "entries" : filter + " entries"}
+          {category === "all" ? "entries" : category + " entries"}
         </div>
       )}
 
       {totalCount === 0 && (
         <div className="empty-state" role="status">
           <strong>No changelog entries found.</strong>
-          {searchQuery && <span>Try a different search term.</span>}
+          {state.query && <span>Try a different search term.</span>}
         </div>
       )}
 
-      {versions.map((version) => (
-        <div key={version} className="version-section">
-          <div className="version-header">
-            <span className="version-badge">{groupLabel(version)}</span>
-            <div className="version-divider" />
-          </div>
+      {totalCount > 0 && (
+        <LayoutComponent
+          layout={state.layout}
+          entries={paginated ? state.paged : state.filtered}
+          query={searchable ? state.query : ""}
+        />
+      )}
 
-          <div
-            className="timeline-container"
-            {...(activeLayout === "horizontal"
-              ? {
-                  tabIndex: 0,
-                  role: "group",
-                  "aria-label": `Version ${version} entries`,
-                }
-              : {})}
-          >
-            <div className="timeline-line" />
-            {groupedByVersion[version].map((entry, index) => {
-              const config = categoryConfig[entry.category];
-              const isLeft = index % 2 === 0;
-              const itemClass = activeLayout === "center"
-                ? isLeft ? "timeline-item--left" : "timeline-item--right"
-                : "";
-              return (
-                <div key={entry.id} className={`timeline-item ${itemClass}`}>
-                  <div
-                    className="timeline-dot"
-                    style={{ color: config.color }}
-                  />
-                  <div className="timeline-card">
-                    <div className="card-header">
-                      <span className="category-icon">{config.icon}</span>
-                      <div className="card-content">
-                        <h3 className="card-title">
-                          {highlightMatches(entry.title, searchable ? searchQuery : "")}
-                        </h3>
-                        <div className="card-meta">
-                          <span
-                            className="category-label"
-                            style={{
-                              background: config.bgColor,
-                              color: config.textColor,
-                            }}
-                          >
-                            {config.label}
-                          </span>
-                          {entry.status !== "shipped" && (
-                            <span className="status-badge" data-status={entry.status}>
-                              {STATUS_LABELS[entry.status]}
-                            </span>
-                          )}
-                          {meta(entry).map((item) => (
-                            <React.Fragment key={item}>
-                              <span aria-hidden="true">•</span>
-                              <span>{item}</span>
-                            </React.Fragment>
-                          ))}
-                        </div>
-                        <p className="card-description">
-                          {highlightMatches(entry.description, searchable ? searchQuery : "")}
-                        </p>
-                        <div className="card-tags">
-                          {entry.tags.map((tag) => (
-                            <span key={tag} className="tag">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-
-      {showPagination && totalCount > maxVisible && (
+      {paginated && totalCount > pageSize && (
         <Pagination
-          page={currentPage}
-          pageSize={maxVisible}
+          page={page}
+          pageSize={pageSize}
           totalCount={totalCount}
-          categoryFilter={filter}
+          categoryFilter={category}
           onPageChange={handlePageChange}
         />
       )}
