@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { groupByVersion } from '../grouping';
-import { CATEGORY_CONFIG } from '../model/categories';
 import EntryCard from '../components/EntryCard';
 import type { LayoutProps } from './types';
 
@@ -37,10 +36,7 @@ const ClassicTimeline: React.FC<LayoutProps> = ({ layout, entries, query }) => {
                   : '';
               return (
                 <div key={entry.id} className={`timeline-item ${side}`}>
-                  <div
-                    className="timeline-dot"
-                    style={{ color: CATEGORY_CONFIG[entry.category].color }}
-                  />
+                  <div className="timeline-dot" data-category={entry.category} />
                   <EntryCard entry={entry} query={query} />
                 </div>
               );

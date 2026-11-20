@@ -36,10 +36,7 @@ const EntryCard: React.FC<EntryCardProps> = ({ entry, query = '' }) => {
         <div className="card-content">
           <h3 className="card-title">{highlightMatches(entry.title, query)}</h3>
           <div className="card-meta">
-            <span
-              className="category-label"
-              style={{ background: config.bgColor, color: config.textColor }}
-            >
+            <span className="category-label" data-category={entry.category}>
               {config.label}
             </span>
             {entry.status !== 'shipped' && (

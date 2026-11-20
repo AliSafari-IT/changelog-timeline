@@ -1,7 +1,8 @@
 .changelog-timeline {
   /* Timeline theme colors */
   --timeline-primary: var(--asm-color-brand-primary-600);
-  --timeline-primary-light: var(--asm-color-brand-primary-50);
+  /* Tinted from the primary so it also works on dark surfaces. */
+  --timeline-primary-light: color-mix(in oklab, var(--timeline-primary) 14%, var(--timeline-bg));
   --timeline-primary-dark: var(--asm-color-brand-primary-700);
   --timeline-border: var(--asm-color-border);
   --timeline-bg: var(--asm-color-surface);
@@ -11,40 +12,46 @@
   --timeline-shadow-hover: var(--asm-effect-shadow-md);
 
   /* Timeline spacing using ASafariM tokens */
-  --timeline-dot-size: 16px;
-  --timeline-line-width: 2px;
+  --timeline-dot-size: var(--asm-space-4);
+  --timeline-line-width: var(--asm-border-thin);
   --timeline-gap: var(--asm-space-8);
-  --timeline-card-width: 380px;
+  --timeline-card-width: calc(var(--asm-space-16) * 6);
   --timeline-padding: var(--asm-space-6);
+  --timeline-on-primary: var(--asm-color-button-primary-text);
+  --timeline-motion: var(--asm-motion-duration-normal) var(--asm-motion-easing-standard);
   --timeline-connector: var(--asm-space-6);
 
-  /* Category colors using semantic tokens */
-  --category-feature-bg: rgba(34, 197, 94, 0.1);
-  --category-feature-text: var(--asm-color-semantic-success);
+  /* Category colours from semantic tokens; tints are mixed so they follow light/dark. */
   --category-feature-icon: var(--asm-color-semantic-success);
-
-  --category-fix-bg: rgba(239, 68, 68, 0.1);
-  --category-fix-text: var(--asm-color-semantic-error);
   --category-fix-icon: var(--asm-color-semantic-error);
-
-  --category-improvement-bg: rgba(59, 130, 246, 0.1);
-  --category-improvement-text: var(--asm-color-semantic-info);
   --category-improvement-icon: var(--asm-color-semantic-info);
-
-  --category-security-bg: rgba(245, 158, 11, 0.1);
-  --category-security-text: var(--asm-color-semantic-warning);
   --category-security-icon: var(--asm-color-semantic-warning);
-
-  --category-breaking-bg: rgba(239, 68, 68, 0.1);
-  --category-breaking-text: var(--asm-color-semantic-error);
   --category-breaking-icon: var(--asm-color-semantic-error);
+  --category-docs-icon: var(--timeline-primary);
 
-  --category-docs-bg: rgba(139, 92, 246, 0.1);
-  --category-docs-text: var(--asm-color-brand-primary-600);
-  --category-docs-icon: var(--asm-color-brand-primary-600);
+  --category-feature-bg: color-mix(in oklab, var(--category-feature-icon) 12%, transparent);
+  --category-fix-bg: color-mix(in oklab, var(--category-fix-icon) 12%, transparent);
+  --category-improvement-bg: color-mix(in oklab, var(--category-improvement-icon) 12%, transparent);
+  --category-security-bg: color-mix(in oklab, var(--category-security-icon) 12%, transparent);
+  --category-breaking-bg: color-mix(in oklab, var(--category-breaking-icon) 12%, transparent);
+  --category-docs-bg: color-mix(in oklab, var(--category-docs-icon) 12%, transparent);
+
+  /* Text is pulled toward the body text colour for contrast in both themes. */
+  --category-feature-text: color-mix(in oklab, var(--category-feature-icon) 72%, var(--timeline-text));
+  --category-fix-text: color-mix(in oklab, var(--category-fix-icon) 72%, var(--timeline-text));
+  --category-improvement-text: color-mix(in oklab, var(--category-improvement-icon) 72%, var(--timeline-text));
+  --category-security-text: color-mix(in oklab, var(--category-security-icon) 72%, var(--timeline-text));
+  --category-breaking-text: color-mix(in oklab, var(--category-breaking-icon) 72%, var(--timeline-text));
+  --category-docs-text: color-mix(in oklab, var(--category-docs-icon) 72%, var(--timeline-text));
+
+  /* Status palette shared by every roadmap view. Override these to re-theme. */
+  --ct-status-shipped: var(--timeline-primary);
+  --ct-status-in-progress: var(--asm-color-semantic-info);
+  --ct-status-next: var(--asm-color-semantic-warning);
+  --ct-status-idea: var(--asm-color-semantic-success);
 
   font-family: var(--asm-font-family-base);
-  max-width: 1024px;
+  max-width: var(--asm-container-lg);
   margin: 0 auto;
   padding: var(--asm-space-8) var(--asm-space-4);
   background: var(--timeline-bg);
@@ -79,13 +86,13 @@
 
 .filter-chip {
   padding: var(--asm-space-2) var(--asm-space-4);
-  border-radius: 9999px;
-  border: 1px solid var(--timeline-border);
+  border-radius: var(--asm-radius-full);
+  border: var(--asm-border-hairline) solid var(--timeline-border);
   background: var(--timeline-bg);
   cursor: pointer;
   font-size: var(--asm-font-size-sm);
   font-weight: var(--asm-font-weight-500);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--timeline-motion);
   color: var(--timeline-text);
 }
 
@@ -96,7 +103,7 @@
 
 .filter-chip.active {
   background: var(--timeline-primary);
-  color: var(--color-white, white);
+  color: var(--timeline-on-primary);
   border-color: var(--timeline-primary);
 }
 
@@ -122,21 +129,21 @@
   top: 0;
   background: var(--timeline-bg);
   padding: var(--asm-space-3) 0;
-  z-index: 100;
+  z-index: var(--asm-z-dropdown);
 }
 
 .version-badge {
   background: var(--timeline-primary);
-  color: white;
+  color: var(--timeline-on-primary);
   padding: var(--asm-space-2) var(--asm-space-3);
-  border-radius: 9999px;
+  border-radius: var(--asm-radius-full);
   font-weight: var(--asm-font-weight-600);
   font-size: var(--asm-font-size-sm);
 }
 
 .version-divider {
   flex: 1;
-  height: 1px;
+  height: var(--asm-border-hairline);
   background: var(--timeline-border);
 }
 
@@ -168,9 +175,9 @@
   top: var(--asm-space-2);
   width: var(--timeline-dot-size);
   height: var(--timeline-dot-size);
-  border-radius: 9999px;
-  border: 2px solid var(--timeline-bg);
-  box-shadow: 0 0 0 2px currentColor;
+  border-radius: var(--asm-radius-full);
+  border: var(--asm-border-thin) solid var(--timeline-bg);
+  box-shadow: 0 0 0 var(--asm-border-thin) currentColor;
   z-index: 2;
 }
 
@@ -178,11 +185,11 @@
 .timeline-card {
   position: relative;
   background: var(--timeline-bg);
-  border: 1px solid var(--timeline-border);
-  border-radius: 8px;
+  border: var(--asm-border-hairline) solid var(--timeline-border);
+  border-radius: var(--asm-radius-md);
   padding: var(--asm-space-5);
   box-shadow: var(--timeline-shadow);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--timeline-motion);
   max-width: var(--timeline-card-width);
 }
 
@@ -226,7 +233,7 @@
 
 .category-label {
   padding: var(--asm-space-1) var(--asm-space-2);
-  border-radius: 9999px;
+  border-radius: var(--asm-radius-full);
   font-weight: var(--asm-font-weight-500);
 }
 
@@ -246,8 +253,8 @@
 .tag {
   padding: var(--asm-space-1) var(--asm-space-2);
   background: var(--asm-color-surface-muted);
-  border: 1px solid var(--timeline-border);
-  border-radius: 9999px;
+  border: var(--asm-border-hairline) solid var(--timeline-border);
+  border-radius: var(--asm-radius-full);
   font-size: var(--asm-font-size-xs);
   color: var(--timeline-text-muted);
 }
@@ -312,7 +319,7 @@
   top: calc(var(--asm-space-2) + (var(--timeline-dot-size) / 2));
   right: calc(-1 * var(--timeline-connector));
   width: var(--timeline-connector);
-  height: 1px;
+  height: var(--asm-border-hairline);
   background: var(--timeline-border);
   transform: translateY(-50%);
 }
@@ -323,7 +330,7 @@
   top: calc(var(--asm-space-2) + (var(--timeline-dot-size) / 2));
   left: calc(-1 * var(--timeline-connector));
   width: var(--timeline-connector);
-  height: 1px;
+  height: var(--asm-border-hairline);
   background: var(--timeline-border);
   transform: translateY(-50%);
 }
@@ -442,8 +449,8 @@
   }
 
   .changelog-timeline--horizontal .timeline-container:focus-visible {
-    outline: 2px solid var(--timeline-primary);
-    outline-offset: 2px;
+    outline: var(--asm-border-thin) solid var(--timeline-primary);
+    outline-offset: var(--asm-border-thin);
   }
 
   .changelog-timeline--horizontal .timeline-line {
@@ -507,14 +514,14 @@
 
 .layout-switcher__option {
   padding: var(--asm-space-1) var(--asm-space-3);
-  border: 1px solid var(--timeline-border);
-  border-radius: 8px;
+  border: var(--asm-border-hairline) solid var(--timeline-border);
+  border-radius: var(--asm-radius-md);
   background: var(--timeline-bg);
   color: var(--timeline-text);
   font-size: var(--asm-font-size-sm);
   font-weight: var(--asm-font-weight-500);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--timeline-motion);
 }
 
 .layout-switcher__option:hover {
@@ -525,7 +532,7 @@
 .layout-switcher__option.active {
   background: var(--timeline-primary);
   border-color: var(--timeline-primary);
-  color: var(--color-white, white);
+  color: var(--timeline-on-primary);
 }
 
 /* =========================
@@ -539,19 +546,19 @@
   gap: var(--asm-space-2);
   margin-top: var(--asm-space-10);
   padding: var(--asm-space-6) 0;
-  border-top: 1px solid var(--timeline-border);
+  border-top: var(--asm-border-hairline) solid var(--timeline-border);
 }
 
 .pagination-btn {
   padding: var(--asm-space-2) var(--asm-space-4);
-  border: 1px solid var(--timeline-border);
+  border: var(--asm-border-hairline) solid var(--timeline-border);
   background: var(--timeline-bg);
   color: var(--timeline-text);
-  border-radius: 8px;
+  border-radius: var(--asm-radius-md);
   font-size: var(--asm-font-size-sm);
   font-weight: var(--asm-font-weight-500);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--timeline-motion);
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -570,17 +577,17 @@
 }
 
 .pagination-number {
-  min-width: 40px;
-  height: 40px;
+  min-width: var(--asm-space-10);
+  height: var(--asm-space-10);
   padding: var(--asm-space-2);
-  border: 1px solid var(--timeline-border);
+  border: var(--asm-border-hairline) solid var(--timeline-border);
   background: var(--timeline-bg);
   color: var(--timeline-text);
-  border-radius: 8px;
+  border-radius: var(--asm-radius-md);
   font-size: var(--asm-font-size-sm);
   font-weight: var(--asm-font-weight-500);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--timeline-motion);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -593,13 +600,13 @@
 
 .pagination-number.active {
   background: var(--timeline-primary);
-  color: white;
+  color: var(--timeline-on-primary);
   border-color: var(--timeline-primary);
 }
 
 .pagination-ellipsis {
-  min-width: 40px;
-  height: 40px;
+  min-width: var(--asm-space-10);
+  height: var(--asm-space-10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -688,8 +695,8 @@
   }
 
   .pagination-number {
-    min-width: 36px;
-    height: 36px;
+    min-width: calc(var(--asm-space-8) + var(--asm-space-1));
+    height: calc(var(--asm-space-8) + var(--asm-space-1));
   }
 }
 
@@ -710,7 +717,7 @@
   align-items: center;
   gap: var(--asm-space-2);
   padding: var(--asm-space-3) var(--asm-space-4);
-  border: 1px solid var(--timeline-border);
+  border: var(--asm-border-hairline) solid var(--timeline-border);
   border-radius: var(--asm-radius-md);
   background: var(--timeline-bg);
   color: var(--timeline-text-muted);
@@ -746,7 +753,7 @@
   gap: var(--asm-space-2);
   justify-items: center;
   padding: var(--asm-space-10) var(--asm-space-4);
-  border: 1px dashed var(--timeline-border);
+  border: var(--asm-border-hairline) dashed var(--timeline-border);
   border-radius: var(--asm-radius-md);
   color: var(--timeline-text-muted);
   text-align: center;
@@ -756,24 +763,108 @@
   color: var(--timeline-text);
 }
 
-/* Roadmap status badge (shown for anything not yet shipped). */
+/* Category colours via data attributes (no inline styles). */
+.timeline-dot[data-category="feature"] { color: var(--category-feature-icon); }
+.timeline-dot[data-category="fix"] { color: var(--category-fix-icon); }
+.timeline-dot[data-category="improvement"] { color: var(--category-improvement-icon); }
+.timeline-dot[data-category="security"] { color: var(--category-security-icon); }
+.timeline-dot[data-category="breaking"] { color: var(--category-breaking-icon); }
+.timeline-dot[data-category="docs"] { color: var(--category-docs-icon); }
+
+.category-label[data-category="feature"] { background: var(--category-feature-bg); color: var(--category-feature-text); }
+.category-label[data-category="fix"] { background: var(--category-fix-bg); color: var(--category-fix-text); }
+.category-label[data-category="improvement"] { background: var(--category-improvement-bg); color: var(--category-improvement-text); }
+.category-label[data-category="security"] { background: var(--category-security-bg); color: var(--category-security-text); }
+.category-label[data-category="breaking"] { background: var(--category-breaking-bg); color: var(--category-breaking-text); }
+.category-label[data-category="docs"] { background: var(--category-docs-bg); color: var(--category-docs-text); }
+
+/* ---------------------------------------------------------------
+   Status palette: any element with data-status gets --status-color.
+   --------------------------------------------------------------- */
+.changelog-timeline [data-status="shipped"] { --status-color: var(--ct-status-shipped); }
+.changelog-timeline [data-status="in-progress"] { --status-color: var(--ct-status-in-progress); }
+.changelog-timeline [data-status="next"] { --status-color: var(--ct-status-next); }
+.changelog-timeline [data-status="idea"] { --status-color: var(--ct-status-idea); }
+
+/* Badge shown for anything not yet shipped. */
 .status-badge {
-  --status-color: var(--asm-color-semantic-info);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--asm-space-1);
   padding: var(--asm-space-1) var(--asm-space-2);
   border-radius: var(--asm-radius-full);
   font-weight: var(--asm-font-weight-500);
-  color: var(--status-color);
+  color: color-mix(in oklab, var(--status-color) 72%, var(--timeline-text));
   background: color-mix(in oklab, var(--status-color) 12%, transparent);
   border: var(--asm-border-hairline) solid color-mix(in oklab, var(--status-color) 40%, transparent);
 }
 
-.status-badge[data-status="next"] {
-  --status-color: var(--asm-color-semantic-warning);
+.status-badge::before {
+  content: "";
+  width: var(--asm-space-2);
+  height: var(--asm-space-2);
+  border-radius: var(--asm-radius-full);
+  background: var(--status-color);
 }
 
 .status-badge[data-status="idea"] {
-  --status-color: var(--asm-color-semantic-success);
   border-style: dashed;
+}
+
+.status-badge[data-status="idea"]::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 var(--asm-border-hairline) var(--status-color);
+}
+
+/* Work in progress gently pulses (off with reduced motion: the duration token becomes 0). */
+.status-badge[data-status="in-progress"]::before {
+  animation: ct-pulse calc(var(--asm-motion-duration-slow) * 6) var(--asm-motion-easing-standard) infinite;
+}
+
+@keyframes ct-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--status-color) 60%, transparent); }
+  50% { box-shadow: 0 0 0 var(--asm-space-1) color-mix(in oklab, var(--status-color) 0%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-badge[data-status="in-progress"]::before {
+    animation: none;
+  }
+}
+
+/* Status filter chips carry a colour dot. */
+.filter-chip[data-status]::before {
+  content: "";
+  display: inline-block;
+  width: var(--asm-space-2);
+  height: var(--asm-space-2);
+  margin-right: var(--asm-space-2);
+  border-radius: var(--asm-radius-full);
+  background: var(--status-color);
+  vertical-align: middle;
+}
+
+.filter-chips--status {
+  margin-bottom: var(--asm-space-3);
+}
+
+/* Shared "Show N more" control used by roadmap layouts. */
+.ct-show-more {
+  padding: var(--asm-space-1) var(--asm-space-3);
+  border: var(--asm-border-hairline) dashed var(--timeline-border);
+  border-radius: var(--asm-radius-full);
+  background: transparent;
+  color: var(--timeline-text-muted);
+  font: inherit;
+  font-size: var(--asm-font-size-sm);
+  cursor: pointer;
+  transition: all var(--timeline-motion);
+}
+
+.ct-show-more:hover,
+.ct-show-more:focus-visible {
+  border-color: var(--timeline-primary);
+  color: var(--timeline-text);
 }
 
 .card-meta {
