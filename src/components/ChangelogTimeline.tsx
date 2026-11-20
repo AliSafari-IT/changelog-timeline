@@ -1,10 +1,12 @@
-import React, { useId, useMemo, useRef } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { ChangelogTimelineProps } from "../types";
 import { STATUS_LABELS } from "../types";
 import { CATEGORIES, CATEGORY_CONFIG } from "../model/categories";
 import { useTimelineState } from "../hooks/useTimelineState";
 import { ALL_LAYOUTS, LAYOUTS } from "../layouts/registry";
 import Pagination from "./Pagination";
+import RoadmapGraph from "./RoadmapGraph";
+import { groupKeyOf } from "../model/normalize";
 import "../styles/vtimeline.css";
 
 const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
@@ -19,6 +21,8 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
   onLayoutChange,
   title,
   subtitle,
+  roadmapGraph,
+  roadmapGraphMaxShipped = 3,
 }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const searchId = useId();
@@ -41,6 +45,29 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
       : ALL_LAYOUTS;
     return options.length > 1 ? options : [];
   }, [layoutSwitcher]);
+
+  const [selectedKey, setSelectedKey] = useState<string>();
+  const [pendingScroll, setPendingScroll] = useState<string>();
+  const showGraph = roadmapGraph ?? state.statuses.length > 1;
+
+  // Picking a milestone in the graph jumps to its entries (switching page if needed).
+  const handleGraphSelect = (key: string) => {
+    setSelectedKey(key);
+    if (paginated) {
+      const index = state.filtered.findIndex((entry) => groupKeyOf(entry) === key);
+      if (index >= 0) state.setPage(Math.floor(index / state.pageSize) + 1);
+    }
+    setPendingScroll(key);
+  };
+
+  useEffect(() => {
+    if (!pendingScroll) return;
+    const target = rootRef.current?.querySelector<HTMLElement>(
+      `[data-group-key="${CSS.escape(pendingScroll)}"]`
+    );
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setPendingScroll(undefined);
+  }, [pendingScroll, state.page]);
 
   const handlePageChange = (newPage: number) => {
     state.setPage(newPage);
@@ -156,11 +183,21 @@ const ChangelogTimeline: React.FC<ChangelogTimelineProps> = ({
         </div>
       )}
 
+      {showGraph && totalCount > 0 && (
+        <RoadmapGraph
+          entries={state.filtered}
+          maxShipped={roadmapGraphMaxShipped}
+          onSelect={handleGraphSelect}
+          selectedKey={selectedKey}
+        />
+      )}
+
       {totalCount > 0 && (
         <LayoutComponent
           layout={state.layout}
           entries={paginated ? state.paged : state.filtered}
           query={searchable ? state.query : ""}
+          selectedKey={selectedKey}
         />
       )}
 

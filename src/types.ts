@@ -88,6 +88,14 @@ export interface ChangelogTimelineProps {
   onLayoutChange?: (layout: TimelineLayout) => void;
   title?: string;
   subtitle?: string;
+  /**
+   * Show the roadmap graph (Shipped / Next / Ideas bands over a version axis)
+   * above the entries. By default it shows when the data has more than one status,
+   * so plain changelogs are unchanged.
+   */
+  roadmapGraph?: boolean;
+  /** Newest shipped milestones the graph shows before folding older ones. @default 3 */
+  roadmapGraphMaxShipped?: number;
 }
 
 export interface TimelineItemProps {

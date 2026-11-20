@@ -80,7 +80,7 @@ describe('roadmap entries', () => {
   ];
 
   it('renders entries without version or date', () => {
-    render(<ChangelogTimeline entries={roadmap} />);
+    render(<ChangelogTimeline entries={roadmap} roadmapGraph={false} />);
     expect(screen.getByText('Accordion feed')).toBeTruthy();
     expect(screen.queryByText(/Invalid Date/)).toBeNull();
     expect(screen.getByText('3 votes')).toBeTruthy();
@@ -96,7 +96,7 @@ describe('roadmap entries', () => {
   });
 
   it('finds roadmap items by status and quarter', () => {
-    render(<ChangelogTimeline entries={roadmap} searchable />);
+    render(<ChangelogTimeline entries={roadmap} searchable roadmapGraph={false} />);
     const search = screen.getByLabelText('Search changelog');
     fireEvent.change(search, { target: { value: 'ideas' } });
     expect(screen.getByText('Accordion feed')).toBeTruthy();
@@ -119,6 +119,7 @@ describe('status chips', () => {
           ...entries,
           { id: 'n', category: 'feature', title: 'Planned', description: '', tags: [], status: 'next' },
         ]}
+        roadmapGraph={false}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Next' }));

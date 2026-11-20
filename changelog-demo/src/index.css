@@ -989,3 +989,28 @@ body {
   background: var(--asm-color-brand-primary-600);
   color: var(--asm-color-surface);
 }
+
+/* Roadmap tab: card picked in the graph */
+.roadmap-card {
+  scroll-margin-top: calc(var(--asm-space-16) + var(--asm-space-8));
+}
+
+.roadmap-card.is-selected {
+  border-color: var(--asm-color-brand-primary-600);
+  box-shadow: 0 0 0 var(--asm-border-thin) var(--asm-color-brand-primary-600);
+}
+
+/* Card status pills use the same palette as the roadmap graph. */
+.roadmap-status[data-status] {
+  color: color-mix(in oklab, var(--status-color) 60%, var(--asm-color-text));
+  background: color-mix(in oklab, var(--status-color) 16%, var(--asm-color-surface));
+  border: var(--asm-border-hairline) solid color-mix(in oklab, var(--status-color) 45%, transparent);
+}
+
+.roadmap-status[data-status="shipped"] { --status-color: var(--asm-color-brand-primary-600); }
+.roadmap-status[data-status="in-progress"] { --status-color: var(--asm-color-semantic-info); }
+.roadmap-status[data-status="next"] { --status-color: var(--asm-color-semantic-warning); }
+.roadmap-status[data-status="idea"] {
+  --status-color: var(--asm-color-semantic-success);
+  border-style: dashed;
+}

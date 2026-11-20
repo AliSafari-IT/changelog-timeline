@@ -1,8 +1,11 @@
 // changelog-timeline\src\index.ts
 import '@asafarim/design-tokens/css';
 import './styles/vtimeline.css';
+import './styles/roadmap-graph.css';
 
 export { default as ChangelogTimeline } from './components/ChangelogTimeline';
+export { default as RoadmapGraph } from './components/RoadmapGraph';
+export type { RoadmapGraphProps } from './components/RoadmapGraph';
 export { ENTRY_STATUSES, STATUS_LABELS } from './types';
 export { normalizeEntries, groupKeyOf } from './model/normalize';
 export type { NormalizedEntry } from './model/normalize';
