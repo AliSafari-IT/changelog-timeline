@@ -12,3 +12,6 @@ interface ImportMetaEnv extends Readonly<Record<string, string>> {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// CSS-only entry imported by the library source (paths map to ../src).
+declare module '@asafarim/design-tokens/css';
