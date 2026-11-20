@@ -103,6 +103,8 @@ function App() {
 Since 1.1.0 the same component renders a roadmap. Give entries a `status`; planned work can leave out `version` and `date`, and can group under a `milestone` (for example `2.x`) instead.
 
 ```tsx
+import { ChangelogTimeline, type ChangelogEntry } from '@asafarim/changelog-timeline';
+
 const roadmap: ChangelogEntry[] = [
   { id: 'r1', version: '1.2.0', date: '2026-11-20', status: 'shipped',
     category: 'feature', title: 'Roadmap graph', description: 'Shipped, Next and Ideas bands.', tags: [] },
@@ -445,7 +447,7 @@ pnpm preview
 
 ### Screenshots for a release
 
-Every release gets its own folder, `docs/screenshots/v<version>/`, and the README links those files through the release tag (`raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v<version>/docs/screenshots/v<version>/...`). Never overwrite an older folder: that keeps every published README showing the screenshots of its own version. `pnpm release` re-pins the tag in the links and warns when the folder for the new version is missing.
+Every release gets its own folder, `docs/screenshots/v<version>/`, and the README links those files through the release tag (`raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v<version>/docs/screenshots/v<version>/...`). Never overwrite an older folder: that keeps every published README showing the screenshots of its own version. `pnpm release` rewrites only the tag segment of those links (`.../v<version>/...`); it does not change the folder segment. It stops before tagging when `docs/screenshots/v<version>/` is empty, not linked from the README, or not committed, and it stages that folder with the release commit.
 
 ### Clean
 

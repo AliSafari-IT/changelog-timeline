@@ -43,23 +43,35 @@ function stampReadme(releaseVersion) {
       `$1${releaseVersion}$2`
     );
 
-  // Each release keeps its own screenshots in docs/screenshots/v<version>/ so older
-  // READMEs never show newer images. Remind the releaser when this version has none.
-  if (!fs.existsSync(`./docs/screenshots/v${releaseVersion}`)) {
-    console.warn(`⚠️  No docs/screenshots/v${releaseVersion}/ folder. Add this version's screenshots and link them in README.md.`);
-  }
-
   if (updated !== readme) {
     fs.writeFileSync(readmePath, updated);
     console.log(`✅ Pinned README preview and badge to v${releaseVersion}`);
   }
 }
 
+// Each release keeps its own screenshots in docs/screenshots/v<version>/, linked
+// from the README through the release tag, so older READMEs never show newer
+// images. Stop before tagging when this version's screenshots are missing, not
+// linked, or not going into the tagged commit.
+function checkScreenshots(releaseVersion) {
+  const folder = `docs/screenshots/v${releaseVersion}`;
+  const files = fs.existsSync(folder) ? fs.readdirSync(folder).filter((f) => !f.startsWith('.')) : [];
+  if (files.length === 0) {
+    throw new Error(`No screenshots in ${folder}/. Add this version's screenshots before releasing.`);
+  }
+  const readme = fs.readFileSync('./README.md', 'utf8');
+  if (!readme.includes(`/${folder}/`)) {
+    throw new Error(`README.md does not link ${folder}/. Point the screenshot links at this version's folder.`);
+  }
+  return folder;
+}
+
 // Function to continue with the release process
 function continueRelease() {
   try {
+    const screenshots = checkScreenshots(version);
     stampReadme(version);
-    execSync('git add package.json pnpm-lock.yaml README.md', { stdio: 'inherit' });
+    execSync(`git add package.json pnpm-lock.yaml README.md ${screenshots}`, { stdio: 'inherit' });
 
     const hasStagedChanges = (() => {
       try {
@@ -74,6 +86,11 @@ function continueRelease() {
       execSync(`git commit -m "chore: bump version to v${version}"`, { stdio: 'inherit' });
     } else {
       console.log('No version changes to commit, proceeding with tag...');
+    }
+
+    const tracked = execSync(`git ls-files ${screenshots}`, { encoding: 'utf8' }).trim();
+    if (!tracked) {
+      throw new Error(`${screenshots}/ is not committed, so the tag would miss the screenshots.`);
     }
 
     execSync(`git tag v${version}`, { stdio: 'inherit' });
