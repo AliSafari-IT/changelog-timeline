@@ -2,8 +2,8 @@
 
 A responsive, paginated vertical changelog timeline component built with React, TypeScript, and ASafariM design tokens. See demo at [https://alisafari-it.github.io/changelog-timeline/](https://alisafari-it.github.io/changelog-timeline/).
 
-<!-- The release script pins this URL to the release tag, so every published version keeps its own preview. -->
-[![Changelog Timeline Demo](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/changelog-demo/public/changelog-timeline.webp)](https://alisafari-it.github.io/changelog-timeline/)
+<!-- Screenshots live in docs/screenshots/v<version>/ and are linked through the release tag, so each published version keeps showing its own screenshots. -->
+[![Roadmap overview graph in Changelog Timeline 1.2.0](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/roadmap-light.png)](https://alisafari-it.github.io/changelog-timeline/)
 
 ![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
@@ -26,6 +26,18 @@ A responsive, paginated vertical changelog timeline component built with React, 
 - 🎯 **TypeScript** - fully typed API
 - ⚛️ **React 18 and 19** supported
 - 🌳 **Tree-shakable** - import only what you need
+
+---
+
+## Screenshots (1.2.0)
+
+| Changelog, light | Changelog, dark |
+|---|---|
+| ![Changelog timeline in light theme](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/changelog-light.png) | ![Changelog timeline in dark theme](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/changelog-dark.png) |
+
+| Roadmap, dark | Roadmap on a phone |
+|---|---|
+| ![Roadmap overview graph in dark theme](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/roadmap-dark.png) | ![Roadmap overview graph on a 390px phone, axis turned vertical](https://raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v1.2.0/docs/screenshots/v1.2.0/roadmap-phone.png) |
 
 ---
 
@@ -430,6 +442,10 @@ pnpm build
 ```bash
 pnpm preview
 ```
+
+### Screenshots for a release
+
+Every release gets its own folder, `docs/screenshots/v<version>/`, and the README links those files through the release tag (`raw.githubusercontent.com/AliSafari-IT/changelog-timeline/v<version>/docs/screenshots/v<version>/...`). Never overwrite an older folder: that keeps every published README showing the screenshots of its own version. `pnpm release` re-pins the tag in the links and warns when the folder for the new version is missing.
 
 ### Clean
 
